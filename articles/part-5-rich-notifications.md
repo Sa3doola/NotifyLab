@@ -153,15 +153,16 @@ The same Service Extension can turn an alert into a **message from a person**. i
 It takes three things:
 
 1. **The Communication Notifications capability** on the app target (Part 2). Automatic signing adds it to your App ID on the next build to a device.
-2. **`INSendMessageIntent` in the app's `NSUserActivityTypes`**:
+2. **`INSendMessageIntent` in the app's `NSUserActivityTypes`**, shown below.
+3. **Code in the Service Extension** that describes the message to the system.
+
+The second one is three lines in `project.yml`:
 
 ```yaml
         # Communication notifications (Part 5): the intents the Service Extension donates.
         NSUserActivityTypes:
           - INSendMessageIntent
 ```
-
-3. **Code in the Service Extension** that describes the message to the system.
 
 The push itself is an ordinary alert with `mutable-content: 1`, plus who sent it and which chat it belongs to (`payloads/driver-message.apns`):
 

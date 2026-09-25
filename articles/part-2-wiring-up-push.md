@@ -309,4 +309,4 @@ apns-unique-id: <a UUID you can look up in the Delivery Log>
 - **HTTP/2 only.** APNs refuses HTTP/1.1. Use port 443, or 2197 if your network blocks 443.
 - **Check every release build.** Run `codesign` on the app inside the exported `.ipa`. `aps-environment` must say `production`.
 
-**Next: Part 3, Device tokens.** What the token really is, why it isn't a fixed length (80 bytes on the Simulator, 32 on my iPhone), why you get one before the user says yes, when it changes, and how Firebase swaps it for an FCM token.
+**Next: [Part 3, Device tokens](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-3-device-tokens-3c0fabf8807a).** What the token really is, why it isn't a fixed length (80 bytes on the Simulator, 32 on my iPhone), why you get one before the user says yes, when it changes, and how Firebase swaps it for an FCM token.

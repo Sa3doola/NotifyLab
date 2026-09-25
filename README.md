@@ -1,6 +1,6 @@
 # NotifyLab
 
-The demo app for the series **"iOS Notifications, End to End."**
+The demo app for the series **[iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e)** on Medium. Start with Part 0, the map of the whole series.
 One SwiftUI app with five tabs, each a real product scenario, and two notification extensions.
 
 | Tab | Scenario | Shows |

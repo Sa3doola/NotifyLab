@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 5 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 Everything so far has been text. This part adds what makes a notification feel like part of your app: a photo of the parcel, a message that looks like it came from a person, and a card with real UI behind a long-press. None of it needs a new kind of push. It's the same alert from Part 4, plus two small extensions that iOS runs for you.
 
 By the end you'll have:
@@ -17,7 +19,7 @@ By the end you'll have:
 ![A real order push on an iPhone: Order #1042 shipped, Arriving today, 2–4 pm, with a photo thumbnail on the right](screenshots/p5-rich-banner.png)
 *The same "shipped" push as Part 4, now with a photo the Service Extension downloaded.*
 
-> Code: the `NotifyLabService` and `NotifyLabContent` folders in the NotifyLab repo. Test on an iPhone: the Simulator runs the Service Extension but can't draw the thumbnail.
+> Code: the `NotifyLabService` and `NotifyLabContent` folders in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab). Test on an iPhone: the Simulator runs the Service Extension but can't draw the thumbnail.
 
 ---
 

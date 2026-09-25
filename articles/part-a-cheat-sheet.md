@@ -4,9 +4,11 @@
 
 ---
 
+*This is the appendix of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 This page collects everything from Parts 0 to 7 that you'll want to look up again. Where Apple's documentation and my own tests disagreed, it says so. The rule I followed throughout: follow the docs, and know what the servers actually do.
 
-> Everything this page refers to is in the NotifyLab repo.
+> Everything this page refers to is in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab).
 
 ---
 

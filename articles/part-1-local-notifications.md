@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 1 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 Local notifications are the best place to start. They need no server, no Apple Developer account and no certificates. They still teach you most of what you'll use later: permission, categories, actions, the delegate, and how iOS decides what's worth interrupting someone for.
 
 We're building the **Habits** tab of NotifyLab. By the end you'll have:
@@ -15,7 +17,7 @@ We're building the **Habits** tab of NotifyLab. By the end you'll have:
 
 ![The permission prompt, shown from the Habits tab](screenshots/p1-permission-prompt.png)
 
-> Code: `HabitScheduler.swift`, `NotificationCategories.swift` and `NotificationRouter.swift` in the NotifyLab repo. Everything below runs in the Simulator.
+> Code: `HabitScheduler.swift`, `NotificationCategories.swift` and `NotificationRouter.swift` in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab). Everything below runs in the Simulator.
 
 ---
 

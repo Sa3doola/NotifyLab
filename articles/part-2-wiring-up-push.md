@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 2 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 Local notifications needed nothing from Apple. Remote ones need four things to line up: an App ID with push turned on, a build signed with the right entitlement, a key your server signs its requests with, and the same environment on both sides. When one of them is off, nothing crashes. The push just never arrives, and APNs gives you a one-word reason, if you're lucky enough to be looking.
 
 By the end of this part you'll have:
@@ -16,7 +18,7 @@ By the end of this part you'll have:
 
 > You need a paid Apple Developer Program membership ($99 a year). The free Personal Team can't use push notifications.
 
-> Code: `project.yml`, `tools/lib/apns.mjs` and `tools/check-key.mjs` in the NotifyLab repo.
+> Code: `project.yml`, `tools/lib/apns.mjs` and `tools/check-key.mjs` in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab).
 
 ---
 

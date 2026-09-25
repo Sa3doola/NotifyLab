@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 3 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 A device token is an address. Your server can't push without one, and it can go stale without anyone noticing. The phone never learns that its old token died. Your server finds out on the next send, and only if it's listening.
 
 We're building the token half of NotifyLab's **Orders** tab. By the end you'll have:
@@ -14,7 +16,7 @@ We're building the token half of NotifyLab's **Orders** tab. By the end you'll h
 - Dead tokens deleted on the send path, and silent devices pruned after 60 days
 - Real sends, through FCM and straight to APNs
 
-> Code: `PushTokenStore.swift`, `FirebaseBridge.swift` and `tools/registry-server.mjs` in the NotifyLab repo. You need the key and `tools/.env` from Part 2.
+> Code: `PushTokenStore.swift`, `FirebaseBridge.swift` and `tools/registry-server.mjs` in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab). You need the key and `tools/.env` from Part 2.
 
 ---
 

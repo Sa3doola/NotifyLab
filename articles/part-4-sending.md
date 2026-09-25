@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 4 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 You have a key (Part 2) and a token (Part 3). Sending is one HTTP request. What makes a push feel right is everything around that request: how urgent it says it is, whether it replaces the last one, how long APNs should keep trying, and what the app does when someone taps it.
 
 We're finishing NotifyLab's **Orders** and **Sync** tabs. By the end you'll have:
@@ -17,7 +19,7 @@ We're finishing NotifyLab's **Orders** and **Sync** tabs. By the end you'll have
 
 ![A real order-update banner on the Simulator: TIME SENSITIVE, Your driver is 5 minutes away, Order #1042 is out for delivery](screenshots/p4-order-banner.png)
 
-> Code: `payloads/`, `tools/apns.sh` and `tools/fcm.mjs` in the NotifyLab repo. You need the key and `tools/.env` from Part 2, and a token from Part 3.
+> Code: `payloads/`, `tools/apns.sh` and `tools/fcm.mjs` in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab). You need the key and `tools/.env` from Part 2, and a token from Part 3.
 
 ---
 

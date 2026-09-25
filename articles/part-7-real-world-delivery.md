@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 7 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 Part 0 started with the most common notification problem: **the notification never shows up.** Every part since then built one piece of the path. This one is about the moment it breaks anyway. APNs said `200`, your logs look fine, and the user says *"I never got it."*
 
 A `200` only means APNs accepted the request. Between that and a banner on the screen are seven checks, some on Apple's servers and most on the phone. Each one can hold a notification back, delay it, or show it quietly, and none of them tells your server.
@@ -15,7 +17,7 @@ By the end you'll be able to:
 - Use every testing tool, from dragging a file onto the Simulator to Apple's Delivery Log
 - Walk a missing notification back to the exact check that stopped it
 
-> Code: `StatusView.swift` and `NotificationPermission.swift` in the NotifyLab repo. The Status tab shows most of what this part talks about, live.
+> Code: `StatusView.swift` and `NotificationPermission.swift` in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab). The Status tab shows most of what this part talks about, live.
 
 ---
 

@@ -4,6 +4,8 @@
 
 ---
 
+*This is Part 6 of [iOS Notifications, End to End](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-0-which-notification-do-you-need-cf3057ad7b9e). New to the series? Start with Part 0, the map.*
+
 A VoIP push is the most powerful push iOS has. It needs no permission, it wakes your app right away, and it launches the app if it isn't running. Apple attached one strict condition to that power: **every VoIP push must become a visible incoming call.** Break the rule and iOS ends your app on the spot.
 
 We're building NotifyLab's **Calls** tab. By the end you'll have:
@@ -16,7 +18,7 @@ We're building NotifyLab's **Calls** tab. By the end you'll have:
 ![The incoming call screen on a locked iPhone: NotifyLab Audio, Sara, with Remind Me and slide to answer](screenshots/p6-incoming-call.png)
 *A real VoIP push to my iPhone. iOS draws the whole screen; the app only supplies the name.*
 
-> Code: `VoIPService.swift` in the NotifyLab repo. The call screen needs an iPhone: on the Simulator the push arrives, but CallKit ends the call at once.
+> Code: `VoIPService.swift` in the [NotifyLab repo](https://github.com/Sa3doola/NotifyLab). The call screen needs an iPhone: on the Simulator the push arrives, but CallKit ends the call at once.
 
 > NotifyLab's call is a fake: it rings, and you can answer and hang up, but no audio flows. Carrying the voice (WebRTC, SIP) is its own topic.
 

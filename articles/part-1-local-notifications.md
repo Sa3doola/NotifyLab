@@ -349,4 +349,4 @@ You'll see one line per request, like *"Notification … has a trigger date 2026
 - **Clean up.** Remove delivered notifications when they're no longer true, and reset the badge (`setBadgeCount(0)`) when the user opens the app.
 - **Lock-screen privacy.** Set `hiddenPreviewsBodyPlaceholder` on categories whose body might be personal.
 
-**Next: Part 2, Wiring up push.** We leave the device and set up what remote notifications need: the App ID, capabilities, the entitlements file, and the `.p8` key that your server (or Firebase) uses to talk to APNs, with every screenshot along the way.
+**Next: [Part 2, Wiring up push](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-2-wiring-up-push-b1787b828cdb).** We leave the device and set up what remote notifications need: the App ID, capabilities, the entitlements file, and the `.p8` key that your server (or Firebase) uses to talk to APNs, with every screenshot along the way.

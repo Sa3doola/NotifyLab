@@ -1,0 +1,141 @@
+# Generate the Xcode project with:  xcodegen generate
+# To use your own IDs:  ./tools/set-bundle-prefix.sh com.yourname   (then set DEVELOPMENT_TEAM)
+name: NotifyLab
+
+options:
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+# FCM (Part 3). Only the FirebaseMessaging product is linked.
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: 12.19.0
+
+settings:
+  base:
+    # The ONE place the IDs come from. Bundle IDs and the App Group are derived from it:
+    #   app          $(BUNDLE_ID_PREFIX).notifylab
+    #   extensions   $(BUNDLE_ID_PREFIX).notifylab.service / .content
+    #   App Group    group.$(BUNDLE_ID_PREFIX).notifylab
+    BUNDLE_ID_PREFIX: com.yourco
+    APP_GROUP_ID: group.$(BUNDLE_ID_PREFIX).notifylab
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: ""    # your Team ID (Membership details)
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1"
+
+targets:
+  NotifyLab:
+    type: application
+    platform: iOS
+    sources:
+      - NotifyLab
+      - Shared
+    # FCM (Part 3): GoogleService-Info.plist lives in the git-ignored secrets/ folder, and each
+    # developer brings their own. It's copied in only if it's there, so a fresh clone still builds
+    # (with FCM off). A normal file reference would fail with "Build input file cannot be found".
+    postBuildScripts:
+      - name: Copy GoogleService-Info.plist if present
+        basedOnDependencyAnalysis: false
+        script: |
+          PLIST="$SRCROOT/secrets/GoogleService-Info.plist"
+          if [ -f "$PLIST" ]; then
+            cp "$PLIST" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/"
+          fi
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).notifylab
+        INFOPLIST_KEY_CFBundleDisplayName: NotifyLab
+    info:
+      path: NotifyLab/Info.plist
+      properties:
+        CFBundleDisplayName: NotifyLab
+        AppGroupID: $(APP_GROUP_ID)
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        # Background Modes capability: silent pushes + VoIP pushes
+        UIBackgroundModes:
+          - remote-notification
+          - voip
+        # We hand the APNs token to Firebase ourselves (see FirebaseBridge.swift)
+        FirebaseAppDelegateProxyEnabled: false
+        # Optional: URL of tools/registry-server.mjs, e.g. http://192.168.1.20:8080
+        NotifyLabRegistryURL: ""
+        # Lets the demo talk plain HTTP to the registry server on your Mac / LAN.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        NSLocalNetworkUsageDescription: NotifyLab sends its push tokens to the demo server on your Mac.
+        # Communication notifications (Part 5): the intents the Service Extension donates.
+        NSUserActivityTypes:
+          - INSendMessageIntent
+    entitlements:
+      path: NotifyLab/NotifyLab.entitlements
+      properties:
+        aps-environment: development
+        com.apple.developer.usernotifications.time-sensitive: true
+        com.apple.developer.usernotifications.communication: true
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+    dependencies:
+      - target: NotifyLabService
+      - target: NotifyLabContent
+      - package: Firebase
+        product: FirebaseMessaging
+
+  NotifyLabService:
+    type: app-extension
+    platform: iOS
+    sources:
+      - NotifyLabService
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).notifylab.service
+    info:
+      path: NotifyLabService/Info.plist
+      properties:
+        CFBundleDisplayName: NotifyLab Service
+        AppGroupID: $(APP_GROUP_ID)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.usernotifications.service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).NotificationService
+    entitlements:
+      path: NotifyLabService/NotifyLabService.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+
+  NotifyLabContent:
+    type: app-extension
+    platform: iOS
+    sources:
+      - NotifyLabContent
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).notifylab.content
+    info:
+      path: NotifyLabContent/Info.plist
+      properties:
+        CFBundleDisplayName: NotifyLab Content
+        AppGroupID: $(APP_GROUP_ID)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.usernotifications.content-extension
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).NotificationViewController
+          NSExtensionAttributes:
+            UNNotificationExtensionCategory: ORDER          # must match aps.category
+            UNNotificationExtensionInitialContentSizeRatio: 0.62
+            UNNotificationExtensionDefaultContentHidden: true   # our card shows title/body itself
+            UNNotificationExtensionUserInteractionEnabled: false
+    entitlements:
+      path: NotifyLabContent/NotifyLabContent.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+    dependencies:
+      - sdk: UserNotificationsUI.framework

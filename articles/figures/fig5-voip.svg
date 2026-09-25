@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="436" viewBox="-20 -20 1040 436" role="img" aria-label="VoIP flow. The caller taps Call, your server finds the callee's VoIP token and sends a voip push to APNs, PushKit wakes or launches the app, which must immediately report the call to CallKit; the system call screen appears, the user answers, and the app connects audio. If the app skips the CallKit report, iOS terminates it and eventually stops delivering VoIP pushes."><style>
+text{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif}
+.sv-zone{fill:#E8ECF1}.sv-box{fill:#fff;stroke:#D3DAE3;stroke-width:1.25}
+.sv-acc{fill:#FBE6E3;stroke:#D4382C;stroke-width:1.5}.sv-bad{fill:#FBE6E3;stroke:#C3362B;stroke-width:1.5;stroke-dasharray:6 4}
+.sv-note{fill:#fff;stroke:#566172;stroke-width:1;stroke-dasharray:3 3}
+.ln-app{stroke:#2C62CC;stroke-width:2}.ln-ios{stroke:#5B6778;stroke-width:2}.ln-apns{stroke:#6A4CC4;stroke-width:2}.ln-fcm{stroke:#B27708;stroke-width:2}.ln-server{stroke:#16806A;stroke-width:2}
+.sv-t{font-size:13.5px;font-weight:600;fill:#131A24}.sv-s{font-size:12.5px;fill:#566172}.sv-i{font-size:12.5px;fill:#131A24}
+.sv-m{font-family:Menlo,monospace;font-size:11.5px;fill:#566172}.sv-mt{font-family:Menlo,monospace;font-size:12px;fill:#131A24}
+.sv-cap{font-family:Menlo,monospace;font-size:11px;letter-spacing:.1em;fill:#566172;font-weight:500}
+.sv-line{stroke:#566172;stroke-width:1.5;fill:none}.sv-line.acc{stroke:#D4382C}.sv-line.bad{stroke:#C3362B}.dash{stroke-dasharray:6 5}
+.sv-life{stroke:#D3DAE3;stroke-width:1.5;stroke-dasharray:3 6}.sv-rule{stroke:#D3DAE3;stroke-width:1}
+.sv-lbl{font-size:12.5px;fill:#131A24;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.sv-lbl.z{stroke:#E8ECF1}.sv-lbl.m{font-family:Menlo,monospace;font-size:11.5px}
+.sv-step{fill:#D4382C}.sv-step-t{font-family:Menlo,monospace;font-size:10.5px;font-weight:600;fill:#fff}
+.f-muted{fill:#566172}.f-acc{fill:#D4382C}.f-bad{fill:#C3362B}
+</style><rect x="-20" y="-20" width="1040" height="436" fill="#fff"/>
+      <defs>
+        <marker id="f5a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-muted"/></marker>
+        <marker id="f5b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-bad"/></marker>
+      </defs>
+      <rect class="sv-box" x="20" y="30" width="170" height="84" rx="10"/>
+      <text class="sv-t" x="105" y="66" text-anchor="middle">Caller</text>
+      <text class="sv-s" x="105" y="88" text-anchor="middle">taps Call</text>
+      <line class="sv-line" x1="190" y1="72" x2="238" y2="72" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="214" y="64" text-anchor="middle">call</text>
+      <rect class="sv-box ln-server" x="240" y="30" width="200" height="84" rx="10"/>
+      <text class="sv-t" x="340" y="58" text-anchor="middle">Your server</text>
+      <text class="sv-s" x="340" y="80" text-anchor="middle">finds the callee's</text>
+      <text class="sv-s" x="340" y="98" text-anchor="middle">VoIP token</text>
+      <line class="sv-line" x1="440" y1="72" x2="488" y2="72" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="464" y="64" text-anchor="middle">push</text>
+      <rect class="sv-box ln-apns" x="490" y="30" width="220" height="84" rx="10"/>
+      <text class="sv-t" x="600" y="58" text-anchor="middle">APNs</text>
+      <text class="sv-m" x="600" y="80" text-anchor="middle">push-type: voip</text>
+      <text class="sv-m" x="600" y="98" text-anchor="middle">topic: &lt;bundle&gt;.voip</text>
+      <line class="sv-line" x1="710" y1="72" x2="758" y2="72" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="734" y="64" text-anchor="middle">deliver</text>
+      <rect class="sv-box ln-app" x="760" y="30" width="220" height="84" rx="10"/>
+      <text class="sv-t" x="870" y="58" text-anchor="middle">PushKit</text>
+      <text class="sv-s" x="870" y="80" text-anchor="middle">wakes or launches the app</text>
+      <text class="sv-m" x="870" y="98" text-anchor="middle">didReceiveIncomingPush</text>
+
+      <line class="sv-line" x1="870" y1="114" x2="870" y2="188" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="878" y="156">must report</text>
+
+      <rect class="sv-acc" x="760" y="190" width="220" height="84" rx="10"/>
+      <text class="sv-t" x="870" y="218" text-anchor="middle">CallKit</text>
+      <text class="sv-mt" x="870" y="240" text-anchor="middle">reportNewIncomingCall</text>
+      <text class="sv-i" x="870" y="259" text-anchor="middle">immediately, every push</text>
+      <line class="sv-line" x1="760" y1="232" x2="712" y2="232" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="736" y="224" text-anchor="middle">shows</text>
+      <rect class="sv-box" x="490" y="190" width="220" height="84" rx="10"/>
+      <text class="sv-t" x="600" y="224" text-anchor="middle">System call screen</text>
+      <text class="sv-s" x="600" y="246" text-anchor="middle">works on the lock screen</text>
+      <line class="sv-line" x1="490" y1="232" x2="442" y2="232" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="466" y="224" text-anchor="middle">answer</text>
+      <rect class="sv-box" x="240" y="190" width="200" height="84" rx="10"/>
+      <text class="sv-t" x="340" y="224" text-anchor="middle">User answers</text>
+      <text class="sv-m" x="340" y="246" text-anchor="middle">CXAnswerCallAction</text>
+      <line class="sv-line" x1="240" y1="232" x2="192" y2="232" marker-end="url(#f5a)"/>
+      <text class="sv-lbl" x="216" y="224" text-anchor="middle">connect</text>
+      <rect class="sv-box" x="20" y="190" width="170" height="84" rx="10"/>
+      <text class="sv-t" x="105" y="224" text-anchor="middle">Call engine</text>
+      <text class="sv-s" x="105" y="246" text-anchor="middle">WebRTC / SIP audio</text>
+
+      <rect class="sv-box" x="20" y="310" width="420" height="70" rx="10"/>
+      <text class="sv-t" x="36" y="333">One-time setup</text>
+      <text class="sv-mt" x="36" y="353">PKPushRegistry(.voIP) → VoIP token → server</text>
+      <text class="sv-s" x="36" y="371">separate from the alert token · no permission prompt</text>
+
+      <line class="sv-line bad dash" x1="870" y1="274" x2="870" y2="308" marker-end="url(#f5b)"/>
+      <text class="sv-lbl" x="878" y="296">if skipped</text>
+      <rect class="sv-bad" x="490" y="310" width="490" height="70" rx="10"/>
+      <text class="sv-t" x="506" y="333">If you skip the CallKit report</text>
+      <text class="sv-i" x="506" y="353">iOS terminates the app. Keep skipping it and</text>
+      <text class="sv-i" x="506" y="371">iOS stops delivering VoIP pushes to your app.</text>
+    </svg>

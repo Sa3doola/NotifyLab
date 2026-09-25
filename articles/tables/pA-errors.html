@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<style>td:first-child{white-space:nowrap} .seen{font-weight:700} td.reason{font-family:Menlo,monospace;font-size:.8em}</style>
+<table>
+  <tr><th>Status</th><th>Reason</th><th>What it means</th><th>Do</th></tr>
+  <tr><td colspan="4" style="background:var(--zone);font:600 13px Menlo,monospace;letter-spacing:.07em;color:var(--muted)">APNS</td></tr>
+  <tr><td>400</td><td class="reason seen">BadDeviceToken</td><td>Token from the other environment, or not a token</td><td>Check sandbox vs production. Don’t delete it</td></tr>
+  <tr><td>400</td><td class="reason seen">DeviceTokenNotForTopic</td><td>Token belongs to another topic, e.g. a VoIP token without <code>.voip</code></td><td>Fix the topic or push type</td></tr>
+  <tr><td>400</td><td class="reason seen">TopicDisallowed</td><td>This key can’t push to that bundle ID</td><td>Fix the topic, or the key’s scope</td></tr>
+  <tr><td>400</td><td class="reason seen">MissingDeviceToken</td><td>No token in the URL</td><td>Your token variable is empty</td></tr>
+  <tr><td>400</td><td class="reason seen">InvalidCollapseId</td><td>Collapse ID longer than 64 bytes</td><td>Shorten it</td></tr>
+  <tr><td>400</td><td class="reason seen">InvalidPushType</td><td>Unknown <code>apns-push-type</code></td><td>Fix the header</td></tr>
+  <tr><td>403</td><td class="reason seen">InvalidProviderToken</td><td>JWT doesn’t match a key: Key ID, Team ID, <code>.p8</code>, or revoked</td><td>Run <code>node tools/check-key.mjs</code></td></tr>
+  <tr><td>403</td><td class="reason">ExpiredProviderToken</td><td>JWT older than 1 hour</td><td>Sign a new one</td></tr>
+  <tr><td>410</td><td class="reason">Unregistered, ExpiredToken</td><td>The token is dead</td><td>Delete it, unless re-uploaded after the timestamp</td></tr>
+  <tr><td>413</td><td class="reason seen">PayloadTooLarge</td><td>Payload too big</td><td>Send IDs, not content</td></tr>
+  <tr><td>429</td><td class="reason">TooManyProviderTokenUpdates</td><td>New JWT more often than every 20 min</td><td>Cache the JWT</td></tr>
+  <tr><td>429</td><td class="reason">TooManyRequests</td><td>Too many pushes to one device</td><td>Slow down, retry later</td></tr>
+  <tr><td>500, 503</td><td class="reason">InternalServerError, ServiceUnavailable</td><td>APNs is having trouble</td><td>Retry with backoff</td></tr>
+  <tr><td colspan="4" style="background:var(--zone);font:600 13px Menlo,monospace;letter-spacing:.07em;color:var(--muted)">FCM HTTP V1</td></tr>
+  <tr><td>400</td><td class="reason seen">INVALID_ARGUMENT</td><td>Bad token, or a bad payload</td><td>Check the payload first, then delete the token</td></tr>
+  <tr><td>401</td><td class="reason">THIRD_PARTY_AUTH_ERROR</td><td>The APNs key in Firebase is missing or wrong</td><td>Upload the <code>.p8</code> (Part 3)</td></tr>
+  <tr><td>403</td><td class="reason">SENDER_ID_MISMATCH</td><td>Token belongs to another Firebase project</td><td>Use the right project</td></tr>
+  <tr><td>404</td><td class="reason">UNREGISTERED</td><td>The token is dead</td><td>Delete it</td></tr>
+  <tr><td>429</td><td class="reason">QUOTA_EXCEEDED</td><td>Too many messages</td><td>Back off</td></tr>
+  <tr><td>500, 503</td><td class="reason">INTERNAL, UNAVAILABLE</td><td>FCM is having trouble</td><td>Retry with backoff</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="486" viewBox="-20 -20 1040 486" role="img" aria-label="One-time push setup. The Apple Developer portal holds the bundle ID, App ID capability, provisioning profile and the .p8 key. Xcode writes the entitlements and signs the build. Firebase or your server stores the .p8 and uses it to authenticate to APNs. The build environment must match the APNs endpoint."><style>
+text{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif}
+.sv-zone{fill:#E8ECF1}.sv-box{fill:#fff;stroke:#D3DAE3;stroke-width:1.25}
+.sv-acc{fill:#FBE6E3;stroke:#D4382C;stroke-width:1.5}.sv-bad{fill:#FBE6E3;stroke:#C3362B;stroke-width:1.5;stroke-dasharray:6 4}
+.sv-note{fill:#fff;stroke:#566172;stroke-width:1;stroke-dasharray:3 3}
+.ln-app{stroke:#2C62CC;stroke-width:2}.ln-ios{stroke:#5B6778;stroke-width:2}.ln-apns{stroke:#6A4CC4;stroke-width:2}.ln-fcm{stroke:#B27708;stroke-width:2}.ln-server{stroke:#16806A;stroke-width:2}
+.sv-t{font-size:13.5px;font-weight:600;fill:#131A24}.sv-s{font-size:12.5px;fill:#566172}.sv-i{font-size:12.5px;fill:#131A24}
+.sv-m{font-family:Menlo,monospace;font-size:11.5px;fill:#566172}.sv-mt{font-family:Menlo,monospace;font-size:12px;fill:#131A24}
+.sv-cap{font-family:Menlo,monospace;font-size:11px;letter-spacing:.1em;fill:#566172;font-weight:500}
+.sv-line{stroke:#566172;stroke-width:1.5;fill:none}.sv-line.acc{stroke:#D4382C}.sv-line.bad{stroke:#C3362B}.dash{stroke-dasharray:6 5}
+.sv-life{stroke:#D3DAE3;stroke-width:1.5;stroke-dasharray:3 6}.sv-rule{stroke:#D3DAE3;stroke-width:1}
+.sv-lbl{font-size:12.5px;fill:#131A24;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.sv-lbl.z{stroke:#E8ECF1}.sv-lbl.m{font-family:Menlo,monospace;font-size:11.5px}
+.sv-step{fill:#D4382C}.sv-step-t{font-family:Menlo,monospace;font-size:10.5px;font-weight:600;fill:#fff}
+.f-muted{fill:#566172}.f-acc{fill:#D4382C}.f-bad{fill:#C3362B}
+</style><rect x="-20" y="-20" width="1040" height="486" fill="#fff"/>
+      <defs>
+        <marker id="f1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-muted"/></marker>
+        <marker id="f1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-acc"/></marker>
+      </defs>
+      <rect class="sv-zone" x="10" y="10" width="300" height="400" rx="14"/>
+      <rect class="sv-zone" x="350" y="10" width="300" height="400" rx="14"/>
+      <rect class="sv-zone" x="690" y="10" width="300" height="400" rx="14"/>
+      <text class="sv-cap" x="30" y="38">APPLE DEVELOPER PORTAL</text>
+      <text class="sv-cap" x="370" y="38">XCODE PROJECT</text>
+      <text class="sv-cap" x="710" y="38">FIREBASE OR YOUR SERVER</text>
+
+      <rect class="sv-box" x="30" y="56" width="260" height="56" rx="9"/>
+      <text class="sv-t" x="46" y="79">Bundle ID</text>
+      <text class="sv-m" x="46" y="99">com.yourco.notifylab</text>
+      <line class="sv-line" x1="160" y1="112" x2="160" y2="138" marker-end="url(#f1a)"/>
+      <text class="sv-lbl z" x="170" y="130">enable push</text>
+      <rect class="sv-box" x="30" y="140" width="260" height="56" rx="9"/>
+      <text class="sv-t" x="46" y="163">App ID capability</text>
+      <text class="sv-s" x="46" y="183">Push Notifications: enabled</text>
+      <line class="sv-line" x1="160" y1="196" x2="160" y2="222" marker-end="url(#f1a)"/>
+      <text class="sv-lbl z" x="170" y="214">generates</text>
+      <rect class="sv-box" x="30" y="224" width="260" height="56" rx="9"/>
+      <text class="sv-t" x="46" y="247">Provisioning profile</text>
+      <text class="sv-s" x="46" y="267">carries aps-environment</text>
+      <rect class="sv-acc" x="30" y="316" width="260" height="56" rx="9"/>
+      <text class="sv-t" x="46" y="339">APNs Auth Key (.p8)</text>
+      <text class="sv-s" x="46" y="359">Key ID · Team ID · download once</text>
+
+      <rect class="sv-box" x="370" y="56" width="260" height="80" rx="9"/>
+      <text class="sv-t" x="386" y="79">Signing &amp; Capabilities</text>
+      <text class="sv-s" x="386" y="98">Push Notifications · Time Sensitive</text>
+      <text class="sv-s" x="386" y="113">Background Modes · Communication</text>
+      <text class="sv-s" x="386" y="128">App Groups</text>
+      <line class="sv-line" x1="500" y1="136" x2="500" y2="158" marker-end="url(#f1a)"/>
+      <text class="sv-lbl z" x="510" y="152">writes</text>
+      <rect class="sv-box" x="370" y="160" width="260" height="56" rx="9"/>
+      <text class="sv-t" x="386" y="183">NotifyLab.entitlements</text>
+      <text class="sv-m" x="386" y="203">aps-environment: development</text>
+      <line class="sv-line" x1="500" y1="216" x2="500" y2="246" marker-end="url(#f1a)"/>
+      <text class="sv-lbl z" x="510" y="236">signed into</text>
+      <rect class="sv-box" x="370" y="248" width="260" height="72" rx="9"/>
+      <text class="sv-t" x="386" y="271">Signed build</text>
+      <text class="sv-s" x="386" y="291">Debug → sandbox token</text>
+      <text class="sv-s" x="386" y="308">TestFlight, App Store → production</text>
+
+      <path class="sv-line" d="M290,252 H330 V284 H368" marker-end="url(#f1a)"/>
+      <text class="sv-lbl" x="330" y="244" text-anchor="middle">installs</text>
+
+      <rect class="sv-box" x="710" y="56" width="260" height="72" rx="9"/>
+      <text class="sv-t" x="726" y="79">APNs</text>
+      <text class="sv-m" x="726" y="99">api.sandbox.push.apple.com</text>
+      <text class="sv-m" x="726" y="116">api.push.apple.com</text>
+      <rect class="sv-box" x="710" y="236" width="260" height="72" rx="9"/>
+      <text class="sv-t" x="726" y="259">Firebase or your server</text>
+      <text class="sv-s" x="726" y="279">stores the .p8 as a secret</text>
+      <text class="sv-s" x="726" y="296">signs a short-lived JWT (ES256)</text>
+      <line class="sv-line" x1="840" y1="236" x2="840" y2="130" marker-end="url(#f1a)"/>
+      <text class="sv-lbl z" x="850" y="188">HTTP/2 + JWT</text>
+
+      <path class="sv-line dash" d="M630,284 H670 V92 H708" marker-end="url(#f1a)"/>
+      <text class="sv-lbl" x="670" y="190" text-anchor="middle" transform="rotate(-90 670 190)">env must match</text>
+
+      <path class="sv-line acc" d="M290,344 H322 V430 H840 V310" marker-end="url(#f1b)"/>
+      <text class="sv-lbl" x="580" y="424" text-anchor="middle">upload the .p8 — it never ships inside the app</text>
+    </svg>

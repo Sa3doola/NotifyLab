@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>“Expired” token</th><th>Is there a timer?</th><th>How you find out</th><th>What to do</th></tr>
+  <tr><td>APNs device token</td><td class="acc">No</td><td>APNs answers <code>410</code> (<em>Unregistered</em> or <em>ExpiredToken</em>) with a timestamp</td><td>Delete it, unless the device uploaded it again after that timestamp</td></tr>
+  <tr><td>FCM registration token</td><td>Android: after 270 days without contact.<br>iOS: <span class="acc">no</span>, it follows APNs</td><td>FCM answers <code>404 UNREGISTERED</code></td><td>Delete it</td></tr>
+  <tr><td>Your provider JWT</td><td>Yes, <strong>1 hour</strong></td><td>APNs answers <code>403 ExpiredProviderToken</code></td><td>Sign a new one every 20–60 min (Part 2)</td></tr>
+  <tr><td>Your own record</td><td>Your rule: not seen for N days</td><td><code>lastSeenAt</code> in your database</td><td>Prune it. Firebase suggests a month; NotifyLab uses 60 days</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

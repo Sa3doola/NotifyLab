@@ -1,0 +1,19 @@
+{
+  "Simulator Target Bundle": "com.yourco.notifylab",
+  "aps": {
+    "alert": {
+      "title": "Karim, your driver",
+      "body": "I'm outside your building. Which entrance?"
+    },
+    "sound": "default",
+    "category": "MESSAGE",
+    "thread-id": "chat-order-1042",
+    "mutable-content": 1
+  },
+  "sender": {
+    "id": "driver-17",
+    "name": "Karim",
+    "avatar": "https://picsum.photos/seed/notifylab-driver/200/200.jpg"
+  },
+  "conversationId": "chat-order-1042"
+}

@@ -1,0 +1,89 @@
+{
+  "info": {
+    "name": "NotifyLab: APNs & FCM",
+    "description": "Before sending: Postman ▸ Settings ▸ General ▸ HTTP version = HTTP/2 (APNs refuses HTTP/1.1).\n\nFill the collection variables:\n• jwt: output of `node tools/jwt.mjs` (valid 60 min)\n• deviceToken: from the app's Orders tab\n• fcmAccessToken: output of `node tools/fcm.mjs --print-token`\n• fcmToken, projectId: from Firebase",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "jwt", "value": "" },
+    { "key": "deviceToken", "value": "" },
+    { "key": "bundleId", "value": "com.yourco.notifylab" },
+    { "key": "apnsHost", "value": "api.sandbox.push.apple.com" },
+    { "key": "fcmAccessToken", "value": "" },
+    { "key": "fcmToken", "value": "" },
+    { "key": "projectId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "APNs · Order shipped (alert, priority 10)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "authorization", "value": "bearer {{jwt}}" },
+          { "key": "apns-topic", "value": "{{bundleId}}" },
+          { "key": "apns-push-type", "value": "alert" },
+          { "key": "apns-priority", "value": "10" },
+          { "key": "apns-collapse-id", "value": "order-1042" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"aps\": {\n    \"alert\": { \"title\": \"Order #1042 shipped\", \"body\": \"Arriving today, 2–4 pm\" },\n    \"sound\": \"default\",\n    \"category\": \"ORDER\",\n    \"thread-id\": \"order-1042\",\n    \"mutable-content\": 1\n  },\n  \"orderId\": \"1042\",\n  \"status\": \"shipped\",\n  \"eta\": \"2–4 pm\",\n  \"image\": \"https://picsum.photos/seed/notifylab-parcel/600/400.jpg\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "https://{{apnsHost}}/3/device/{{deviceToken}}"
+      }
+    },
+    {
+      "name": "APNs · Marketing (passive, priority 5)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "authorization", "value": "bearer {{jwt}}" },
+          { "key": "apns-topic", "value": "{{bundleId}}" },
+          { "key": "apns-push-type", "value": "alert" },
+          { "key": "apns-priority", "value": "5" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"aps\": {\n    \"alert\": { \"title\": \"New this week\", \"body\": \"Five habits people stick with.\" },\n    \"interruption-level\": \"passive\",\n    \"relevance-score\": 0.2\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "https://{{apnsHost}}/3/device/{{deviceToken}}"
+      }
+    },
+    {
+      "name": "APNs · Silent sync (background, priority 5)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "authorization", "value": "bearer {{jwt}}" },
+          { "key": "apns-topic", "value": "{{bundleId}}" },
+          { "key": "apns-push-type", "value": "background" },
+          { "key": "apns-priority", "value": "5" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"aps\": { \"content-available\": 1 },\n  \"reason\": \"new-orders\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "https://{{apnsHost}}/3/device/{{deviceToken}}"
+      }
+    },
+    {
+      "name": "FCM v1 · Order shipped",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{fcmAccessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": {\n    \"token\": \"{{fcmToken}}\",\n    \"apns\": {\n      \"headers\": { \"apns-push-type\": \"alert\", \"apns-priority\": \"10\" },\n      \"payload\": {\n        \"aps\": {\n          \"alert\": { \"title\": \"Order #1042 shipped\", \"body\": \"Sent through FCM\" },\n          \"sound\": \"default\",\n          \"category\": \"ORDER\",\n          \"mutable-content\": 1\n        },\n        \"orderId\": \"1042\",\n        \"status\": \"shipped\"\n      }\n    }\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "https://fcm.googleapis.com/v1/projects/{{projectId}}/messages:send"
+      }
+    }
+  ]
+}

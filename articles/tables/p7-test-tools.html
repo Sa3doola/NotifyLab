@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<style>.ok{color:#16806A;font-weight:650}.no{color:var(--acc);font-weight:650}.part{color:#B27708;font-weight:650}</style>
+<table>
+  <tr><th>Tool</th><th>Service Extension</th><th>Silent push</th><th>VoIP</th><th>Best for</th></tr>
+  <tr><td>Drag a <code>.apns</code> file onto the Simulator, or <code>simctl push</code></td><td class="no">Doesn’t run</td><td class="no">Refused</td><td class="no">No</td><td>Text, buttons, grouping, deep links. No account needed</td></tr>
+  <tr><td>Real sandbox push to the Simulator</td><td class="part">Runs, no thumbnail</td><td class="part">200, app not woken</td><td class="part">Delivered, call ended at once</td><td>Service Extension logic without a device</td></tr>
+  <tr><td>Real push to an iPhone</td><td class="ok">Runs</td><td class="ok">Wakes the app</td><td class="ok">Rings</td><td>Everything. The only complete test</td></tr>
+  <tr><td>curl or Postman (HTTP/2)</td><td colspan="3" style="text-align:center" class="muted">same as the device you send to</td><td>Sharing exact requests with your server team</td></tr>
+  <tr><td>Push Notifications Console</td><td colspan="3" style="text-align:center" class="muted">same as the device you send to</td><td>Quick sends from a browser, and “Get cURL Command”</td></tr>
+  <tr><td>Delivery Log</td><td colspan="3" style="text-align:center" class="muted">—</td><td>Did APNs deliver it to the device? (sandbox only)</td></tr>
+  <tr><td>Firebase “Send test message”</td><td colspan="3" style="text-align:center" class="muted">same as the device you send to</td><td>Checking the FCM → APNs link</td></tr>
+  <tr><td><code>log stream</code> or Console.app</td><td colspan="3" style="text-align:center" class="muted">—</td><td>Did the phone receive it?</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

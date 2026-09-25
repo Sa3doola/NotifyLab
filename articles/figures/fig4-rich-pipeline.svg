@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="406" viewBox="-20 -20 1040 406" role="img" aria-label="Rich notification pipeline. A payload with mutable-content 1 and a category goes through APNs. The Service Extension runs before display, downloads and attaches the image, or turns a chat message into a communication notification with the sender's photo, within about 30 seconds, or iOS falls back to the original text. The banner shows a thumbnail. A long-press opens the Content Extension, chosen by category, with custom UI and actions. An action is handled either inside the extension or forwarded to the app."><style>
+text{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif}
+.sv-zone{fill:#E8ECF1}.sv-box{fill:#fff;stroke:#D3DAE3;stroke-width:1.25}
+.sv-acc{fill:#FBE6E3;stroke:#D4382C;stroke-width:1.5}.sv-bad{fill:#FBE6E3;stroke:#C3362B;stroke-width:1.5;stroke-dasharray:6 4}
+.sv-note{fill:#fff;stroke:#566172;stroke-width:1;stroke-dasharray:3 3}
+.ln-app{stroke:#2C62CC;stroke-width:2}.ln-ios{stroke:#5B6778;stroke-width:2}.ln-apns{stroke:#6A4CC4;stroke-width:2}.ln-fcm{stroke:#B27708;stroke-width:2}.ln-server{stroke:#16806A;stroke-width:2}
+.sv-t{font-size:13.5px;font-weight:600;fill:#131A24}.sv-s{font-size:12.5px;fill:#566172}.sv-i{font-size:12.5px;fill:#131A24}
+.sv-m{font-family:Menlo,monospace;font-size:11.5px;fill:#566172}.sv-mt{font-family:Menlo,monospace;font-size:12px;fill:#131A24}
+.sv-cap{font-family:Menlo,monospace;font-size:11px;letter-spacing:.1em;fill:#566172;font-weight:500}
+.sv-line{stroke:#566172;stroke-width:1.5;fill:none}.sv-line.acc{stroke:#D4382C}.sv-line.bad{stroke:#C3362B}.dash{stroke-dasharray:6 5}
+.sv-life{stroke:#D3DAE3;stroke-width:1.5;stroke-dasharray:3 6}.sv-rule{stroke:#D3DAE3;stroke-width:1}
+.sv-lbl{font-size:12.5px;fill:#131A24;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.sv-lbl.z{stroke:#E8ECF1}.sv-lbl.m{font-family:Menlo,monospace;font-size:11.5px}
+.sv-step{fill:#D4382C}.sv-step-t{font-family:Menlo,monospace;font-size:10.5px;font-weight:600;fill:#fff}
+.f-muted{fill:#566172}.f-acc{fill:#D4382C}.f-bad{fill:#C3362B}
+</style><rect x="-20" y="-20" width="1040" height="406" fill="#fff"/>
+      <defs>
+        <marker id="f4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-muted"/></marker>
+        <marker id="f4b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-acc"/></marker>
+      </defs>
+      <text class="sv-cap" x="20" y="18">BEFORE IT'S SHOWN</text>
+      <rect class="sv-box" x="20" y="30" width="200" height="120" rx="10"/>
+      <text class="sv-t" x="36" y="56">Push payload</text>
+      <text class="sv-mt" x="36" y="82">mutable-content: 1</text>
+      <text class="sv-mt" x="36" y="104">category: ORDER</text>
+      <text class="sv-mt" x="36" y="126">image: https://…</text>
+      <line class="sv-line" x1="220" y1="90" x2="268" y2="90" marker-end="url(#f4a)"/>
+      <text class="sv-lbl" x="244" y="82" text-anchor="middle">send</text>
+      <rect class="sv-box ln-apns" x="270" y="30" width="140" height="120" rx="10"/>
+      <text class="sv-t" x="340" y="72" text-anchor="middle">APNs</text>
+      <text class="sv-s" x="340" y="94" text-anchor="middle">≤ 4 KB payload</text>
+      <text class="sv-m" x="340" y="114" text-anchor="middle">push-type: alert</text>
+      <line class="sv-line" x1="410" y1="90" x2="458" y2="90" marker-end="url(#f4a)"/>
+      <text class="sv-lbl" x="434" y="82" text-anchor="middle">wake</text>
+      <rect class="sv-acc" x="460" y="30" width="240" height="120" rx="10"/>
+      <text class="sv-t" x="476" y="56">Service Extension</text>
+      <text class="sv-i" x="476" y="80">runs before it is shown</text>
+      <text class="sv-i" x="476" y="102">adds the image or sender photo</text>
+      <text class="sv-i" x="476" y="124">~30 s, then iOS falls back</text>
+      <line class="sv-line" x1="700" y1="90" x2="758" y2="90" marker-end="url(#f4a)"/>
+      <text class="sv-lbl" x="729" y="82" text-anchor="middle">show</text>
+      <rect class="sv-box" x="760" y="30" width="220" height="120" rx="10"/>
+      <text class="sv-t" x="776" y="56">Banner</text>
+      <text class="sv-i" x="776" y="80">title, body + thumbnail</text>
+      <text class="sv-i" x="776" y="102">grouped by thread-id</text>
+      <text class="sv-i" x="776" y="124">tap opens the app</text>
+      <path class="sv-line acc dash" d="M600,150 V176 H810 V152" marker-end="url(#f4b)"/>
+      <text class="sv-lbl" x="705" y="196" text-anchor="middle">timeout → original text</text>
+
+      <line class="sv-line" x1="900" y1="150" x2="900" y2="228" marker-end="url(#f4a)"/>
+      <text class="sv-lbl" x="908" y="202">long-press</text>
+
+      <text class="sv-cap" x="20" y="218">AFTER THE USER ENGAGES</text>
+      <rect class="sv-box" x="760" y="230" width="220" height="120" rx="10"/>
+      <text class="sv-t" x="776" y="256">Content Extension</text>
+      <text class="sv-i" x="776" y="280">custom UI on long-press</text>
+      <text class="sv-i" x="776" y="302">chosen by category id</text>
+      <text class="sv-i" x="776" y="324">SwiftUI in a hosting view</text>
+      <line class="sv-line" x1="760" y1="290" x2="702" y2="290" marker-end="url(#f4a)"/>
+      <text class="sv-lbl" x="731" y="282" text-anchor="middle">tap</text>
+      <rect class="sv-box" x="460" y="230" width="240" height="120" rx="10"/>
+      <text class="sv-t" x="476" y="256">Actions</text>
+      <text class="sv-i" x="476" y="280">Track order · Call driver</text>
+      <text class="sv-i" x="476" y="302">buttons or text input</text>
+      <text class="sv-i" x="476" y="324">defined in the category</text>
+      <line class="sv-line" x1="460" y1="257" x2="412" y2="257" marker-end="url(#f4a)"/>
+      <line class="sv-line" x1="460" y1="323" x2="412" y2="323" marker-end="url(#f4a)"/>
+      <rect class="sv-box" x="20" y="230" width="390" height="54" rx="10"/>
+      <text class="sv-t" x="36" y="252">The extension handles it</text>
+      <text class="sv-m" x="36" y="272">.doNotDismiss → update the card in place</text>
+      <rect class="sv-box ln-app" x="20" y="296" width="390" height="54" rx="10"/>
+      <text class="sv-t" x="36" y="318">The app handles it</text>
+      <text class="sv-m" x="36" y="338">.dismissAndForwardAction → didReceive</text>
+    </svg>

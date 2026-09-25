@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>Header</th><th>What it does</th><th>Order update</th><th>Marketing</th><th>Silent sync</th></tr>
+  <tr><td><code>apns-push-type</code></td><td>What kind of push this is. iOS treats each kind differently</td><td><code>alert</code></td><td><code>alert</code></td><td><code>background</code></td></tr>
+  <tr><td><code>apns-priority</code></td><td><code>10</code> now, <code>5</code> when it suits the battery, <code>1</code> never wake the device</td><td><code>10</code></td><td><code>5</code></td><td><code>5</code>. Apple’s docs call <code>10</code> an error</td></tr>
+  <tr><td><code>apns-topic</code></td><td>Your bundle ID. VoIP adds <code>.voip</code></td><td colspan="3" style="text-align:center">your bundle ID</td></tr>
+  <tr><td><code>apns-expiration</code></td><td>Keep trying until this UNIX time (30 days at most). <code>0</code> = try once. Omitted = APNs decides</td><td>When the news is stale</td><td>End of the campaign</td><td>Short, or omit</td></tr>
+  <tr><td><code>apns-collapse-id</code></td><td>A newer push with the same ID replaces the older one on screen. Max 64 bytes</td><td><code>order-1042</code></td><td>—</td><td>—</td></tr>
+  <tr><td><code>apns-id</code></td><td>Your UUID for this request. APNs makes one if you don’t</td><td colspan="3" style="text-align:center">optional</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

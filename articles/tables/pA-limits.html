@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>What</th><th>Limit</th><th>Past it</th></tr>
+  <tr><td>Payload: alert, background</td><td><strong>4 KB</strong> (4,096 bytes)</td><td><code>413 PayloadTooLarge</code> (the sandbox took up to 5,120 in my tests; don’t rely on it)</td></tr>
+  <tr><td>Payload: VoIP</td><td><strong>5 KB</strong> (5,120 bytes)</td><td><code>413 PayloadTooLarge</code></td></tr>
+  <tr><td><code>apns-collapse-id</code></td><td>64 bytes</td><td><code>400 InvalidCollapseId</code></td></tr>
+  <tr><td><code>apns-expiration</code></td><td>30 days at most</td><td>APNs stops trying</td></tr>
+  <tr><td>Kept while the phone is offline</td><td><strong>1</strong> notification per app, usually the newest</td><td>Older ones are dropped</td></tr>
+  <tr><td>Pending local notifications</td><td><strong>64</strong> per app</td><td>iOS keeps the soonest 64 and silently drops the rest</td></tr>
+  <tr><td>Repeating time-interval trigger</td><td>at least 60 s</td><td>The app crashes when it creates the trigger</td></tr>
+  <tr><td>Service Extension</td><td>about <strong>30 s</strong></td><td><code>serviceExtensionTimeWillExpire</code> → show your best attempt</td></tr>
+  <tr><td>Silent push</td><td>about 30 s to run; 2–3 per hour at most</td><td>Throttled or dropped</td></tr>
+  <tr><td>Attachments</td><td>image 10 MB · audio 5 MB · video 50 MB</td><td>Creating the attachment fails</td></tr>
+  <tr><td>Provider JWT</td><td>reuse for 20–60 min</td><td><code>403 ExpiredProviderToken</code> / <code>429 TooManyProviderTokenUpdates</code></td></tr>
+  <tr><td><code>.p8</code> key / <code>.p12</code> certificate</td><td>never expires / 1 year</td><td>An expired certificate stops every push</td></tr>
+  <tr><td>APNs keys per team</td><td>team-scoped: 2 per environment; topic-specific: 200</td><td>You can’t create more</td></tr>
+  <tr><td>FCM token</td><td>Android: 270 days without contact. iOS: no timer</td><td>FCM <code>404 UNREGISTERED</code></td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

@@ -1,0 +1,13 @@
+{
+  "Simulator Target Bundle": "com.yourco.notifylab",
+  "aps": {
+    "alert": {
+      "title": "Drink water",
+      "body": "Sent from a server this time. Long-press for Done / Snooze."
+    },
+    "sound": "default",
+    "category": "HABIT",
+    "thread-id": "habits",
+    "interruption-level": "active"
+  }
+}

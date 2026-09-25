@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>#</th><th>Step</th><th>What your code does, and the API</th></tr>
+  <tr><td>1</td><td class="nowrap">Ask</td><td><code>requestAuthorization(options: [.alert, .sound, .badge])</code>. Add <code>.provisional</code> to skip the prompt (Part 1)</td></tr>
+  <tr><td>2</td><td class="nowrap">Register</td><td><code>registerForRemoteNotifications()</code>. Works even before permission (Part 3)</td></tr>
+  <tr><td>3</td><td class="nowrap">iOS ↔ APNs</td><td>A permanent, encrypted connection that iOS manages. You write no code for it</td></tr>
+  <tr><td>4</td><td class="nowrap">APNs token</td><td><code>didRegisterForRemoteNotificationsWithDeviceToken</code> → <code>Data</code> → hex</td></tr>
+  <tr><td>5</td><td class="nowrap">→ FCM</td><td><code>Messaging.messaging().apnsToken = deviceToken</code>, or automatic with swizzling</td></tr>
+  <tr><td>6</td><td class="nowrap">FCM token</td><td><code>messaging(_:didReceiveRegistrationToken:)</code></td></tr>
+  <tr><td class="nowrap">7–8</td><td class="nowrap">Upload, store</td><td>Your API upserts by device ID: user, tokens, environment, app version, <code>lastSeenAt</code></td></tr>
+  <tr><td class="nowrap">9–10</td><td class="nowrap">Send via FCM</td><td><code>POST …/v1/projects/{id}/messages:send</code> with an OAuth token from a service account</td></tr>
+  <tr><td>11</td><td class="nowrap">FCM → APNs</td><td>FCM signs a request with the <code>.p8</code> you uploaded</td></tr>
+  <tr><td class="muted">or</td><td class="nowrap">Direct</td><td><code>POST /3/device/{token}</code> over HTTP/2 with <code>authorization: bearer &lt;JWT&gt;</code> (Part 2)</td></tr>
+  <tr><td>12</td><td class="nowrap">Deliver</td><td>Device offline? APNs keeps <strong>one</strong> notification per app, usually the newest, until <code>apns-expiration</code></td></tr>
+  <tr><td>13</td><td class="nowrap">Modify</td><td>The Service Extension runs, only when <code>mutable-content: 1</code> (Part 5)</td></tr>
+  <tr><td>14</td><td class="nowrap">Present</td><td>iOS checks permission, Focus, Scheduled Summary and the interruption level. App open? <code>willPresent</code> decides</td></tr>
+  <tr><td>15</td><td class="nowrap">Tap</td><td><code>didReceive(response)</code> → read your custom keys → open the right screen</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

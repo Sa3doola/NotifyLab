@@ -1,0 +1,7 @@
+{
+  "Simulator Target Bundle": "com.yourco.notifylab",
+  "aps": {
+    "content-available": 1
+  },
+  "reason": "new-orders"
+}

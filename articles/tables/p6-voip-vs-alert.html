@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th></th><th>VoIP push (PushKit)</th><th>Alert push</th></tr>
+  <tr><td>Token</td><td>Its own, from <code>PKPushRegistry</code></td><td>From <code>registerForRemoteNotifications()</code></td></tr>
+  <tr><td>Permission</td><td class="acc">None</td><td>Needed to show anything</td></tr>
+  <tr><td><code>apns-push-type</code></td><td><code>voip</code></td><td><code>alert</code></td></tr>
+  <tr><td><code>apns-topic</code></td><td><code>&lt;bundle ID&gt;.voip</code></td><td><code>&lt;bundle ID&gt;</code></td></tr>
+  <tr><td><code>apns-expiration</code></td><td><code>0</code>, or a few seconds</td><td>When the news goes stale</td></tr>
+  <tr><td>Payload</td><td>Up to 5 KB</td><td>Up to 4 KB</td></tr>
+  <tr><td>Wakes your app</td><td><strong>Yes</strong>, and launches it if it isn’t running</td><td>No, unless the user taps it</td></tr>
+  <tr><td>What iOS demands</td><td class="acc">Report an incoming call to CallKit, every time</td><td>Nothing</td></tr>
+  <tr><td>On the Simulator (iOS 27)</td><td>Token and delivery work; CallKit ends the call at once</td><td>Works (Part 4)</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

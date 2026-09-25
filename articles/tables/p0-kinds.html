@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>Kind</th><th>Who triggers it</th><th>Needs permission?</th><th>Wakes your code?</th><th>Real use</th></tr>
+  <tr><td class="nowrap">Local</td><td>The app schedules it on the device</td><td>Yes, to show anything</td><td>Only when tapped</td><td>Habit reminder at 08:00 every weekday</td></tr>
+  <tr><td class="nowrap">Remote alert</td><td>Your server → APNs (often via FCM)</td><td>Yes (full or provisional)</td><td>No, unless tapped. A Service Extension can edit it first</td><td>“Order shipped”, promos</td></tr>
+  <tr><td>Background (silent)</td><td>Your server → APNs</td><td class="acc">No</td><td>Yes, about 30 s in the background. Best-effort</td><td>Refresh the inbox, sync settings</td></tr>
+  <tr><td class="nowrap">VoIP</td><td>Your server → APNs → PushKit</td><td class="acc">No</td><td>Yes, even if the app was killed. It must show a call</td><td>Incoming audio/video call</td></tr>
+  <tr><td class="nowrap">Rich</td><td>Any alert (remote or local)</td><td>Same as alert</td><td>Service Extension before display; Content Extension on long-press</td><td>Product photo, live order card</td></tr>
+  <tr><td class="nowrap">Communication</td><td>A remote alert sent by a person</td><td>Same as alert</td><td>Service Extension before display. It donates a message intent</td><td>Chat message with the sender’s photo. Can break through Focus</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

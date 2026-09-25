@@ -1,0 +1,23 @@
+/* Shared look for the table images. Same palette as the figures. */
+:root { --ink:#131A24; --muted:#566172; --line:#D3DAE3; --zone:#E8ECF1; --acc:#D4382C; --acc-bg:#FBE6E3; }
+html, body { margin: 0; background: #fff; }
+body {
+  padding: 24px 28px;
+  font: 19px/1.42 -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1.5px solid var(--line); border-radius: 14px; overflow: hidden; }
+th {
+  background: var(--zone); text-align: left; vertical-align: bottom;
+  font: 600 13.5px/1.3 Menlo, monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+  padding: 13px 16px;
+}
+td { padding: 14px 16px; vertical-align: top; border-top: 1px solid var(--line); }
+td + td, th + th { border-left: 1px solid var(--line); }
+td:first-child { font-weight: 650; }
+.nowrap { white-space: nowrap; }
+.muted { color: var(--muted); }
+.acc { color: var(--acc); font-weight: 650; }
+tr.here td { background: var(--acc-bg); }
+code { font: .84em Menlo, monospace; background: var(--zone); padding: 1px 5px; border-radius: 5px; white-space: nowrap; }

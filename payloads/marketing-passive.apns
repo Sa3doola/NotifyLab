@@ -1,0 +1,13 @@
+{
+  "Simulator Target Bundle": "com.yourco.notifylab",
+  "aps": {
+    "alert": {
+      "title": "New this week",
+      "body": "Five habits people stick with. Tap to read."
+    },
+    "mutable-content": 1,
+    "interruption-level": "passive",
+    "relevance-score": 0.2
+  },
+  "image": "https://picsum.photos/seed/notifylab-promo/600/400.jpg"
+}

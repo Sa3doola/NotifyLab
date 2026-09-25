@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th></th><th>Passive</th><th>Active (default)</th><th>Time-sensitive</th><th>Critical</th></tr>
+  <tr><td>Sound / vibration</td><td class="muted">No</td><td>Yes</td><td>Yes</td><td>Yes, even when muted</td></tr>
+  <tr><td>Lights up the screen</td><td class="muted">No, goes to the list quietly</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Breaks through Focus</td><td class="muted">No</td><td>Only if the user allows your app</td><td>Yes, if the user allows time-sensitive</td><td>Yes</td></tr>
+  <tr><td>Skips Scheduled Summary</td><td class="muted">No</td><td class="muted">No</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>What you need</td><td>Nothing</td><td>Nothing</td><td><strong>Time Sensitive Notifications</strong> capability</td><td>Entitlement <strong>approved by Apple</strong> + <code>.criticalAlert</code> permission</td></tr>
+  <tr><td>Use it for</td><td>Tips, weekly recap</td><td>Reminders, order updates</td><td>Driver arriving, security alert</td><td>Glucose alarm, home alarm</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

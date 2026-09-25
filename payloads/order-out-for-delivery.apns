@@ -1,0 +1,18 @@
+{
+  "Simulator Target Bundle": "com.yourco.notifylab",
+  "aps": {
+    "alert": {
+      "title": "Your driver is 5 minutes away",
+      "body": "Order #1042 is out for delivery"
+    },
+    "sound": "default",
+    "category": "ORDER",
+    "thread-id": "order-1042",
+    "mutable-content": 1,
+    "interruption-level": "time-sensitive",
+    "relevance-score": 1.0
+  },
+  "orderId": "1042",
+  "status": "out_for_delivery",
+  "eta": "5 min"
+}

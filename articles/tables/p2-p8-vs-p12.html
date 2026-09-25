@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th></th><th>Auth key (.p8)</th><th>Certificate (.p12)</th></tr>
+  <tr><td>Expires</td><td><strong>Never</strong>, until you revoke it</td><td>Every year. Push stops the day it expires</td></tr>
+  <tr><td>Covers</td><td>Every app in your team, or only the bundle IDs you pick</td><td>One app</td></tr>
+  <tr><td>VoIP pushes</td><td>The same key</td><td>A separate VoIP Services certificate</td></tr>
+  <tr><td>Environments</td><td>Sandbox, production, or both</td><td>One certificate for both</td></tr>
+  <tr><td>How your server uses it</td><td>Signs a short JWT, reused for 20–60 min</td><td>Client certificate on the TLS connection</td></tr>
+  <tr><td>How many</td><td>Team-scoped: 2 per environment. Topic-specific: 200 per environment</td><td>One per app and type</td></tr>
+  <tr><td>Download</td><td><strong>Once</strong>. Lose it and you make a new key</td><td>Export again from the Mac that created it</td></tr>
+  <tr><td>Use it in 2026?</td><td class="acc">Yes, the default</td><td class="muted">Only for old servers that can’t sign a JWT</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

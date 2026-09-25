@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>Capability</th><th>What it adds</th><th>Where it lands</th><th>Needed for</th></tr>
+  <tr><td>Push Notifications</td><td><code>aps-environment</code></td><td>Entitlements</td><td>Any remote push. Without it there’s no device token</td></tr>
+  <tr><td>Background Modes → Remote notifications</td><td><code>remote-notification</code></td><td>Info.plist, <code>UIBackgroundModes</code></td><td>Silent pushes that wake the app (Part 4)</td></tr>
+  <tr><td>Background Modes → Voice over IP</td><td><code>voip</code></td><td>Info.plist, <code>UIBackgroundModes</code></td><td>PushKit calls (Part 6)</td></tr>
+  <tr><td>Time Sensitive Notifications</td><td><code>…time-sensitive</code></td><td>Entitlements</td><td>The <em>time-sensitive</em> interruption level (Part 1)</td></tr>
+  <tr><td>Communication Notifications</td><td><code>…communication</code></td><td>Entitlements, plus <code>NSUserActivityTypes</code> in Info.plist</td><td>Messages that show the sender’s photo (Part 5)</td></tr>
+  <tr><td>App Groups</td><td><code>…application-groups</code></td><td>Entitlements of the app <strong>and</strong> both extensions</td><td>Sharing data with the extensions (Part 5)</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

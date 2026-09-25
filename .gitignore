@@ -1,0 +1,20 @@
+# Secrets: .p8 keys, Firebase service account, GoogleService-Info.plist
+secrets/*
+!secrets/README.md
+tools/.env
+tools/.data/
+*.p8
+GoogleService-Info.plist
+
+# The same secrets if they ever end up outside secrets/
+.env
+*.p12
+*.mobileprovision
+*firebase-adminsdk*.json
+*service-account*.json
+
+# Build output
+build/
+DerivedData/
+xcuserdata/
+.DS_Store

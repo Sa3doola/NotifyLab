@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>Key</th><th>What it does</th><th>Part</th></tr>
+  <tr><td><code>aps.alert</code> → <code>title</code>, <code>subtitle</code>, <code>body</code></td><td>The text the user sees</td><td>4</td></tr>
+  <tr><td><code>aps.sound</code></td><td><code>"default"</code>, or the name of a sound file in your app</td><td>4</td></tr>
+  <tr><td><code>aps.badge</code></td><td>The number on the app icon. <code>0</code> removes it</td><td>1</td></tr>
+  <tr><td><code>aps.category</code></td><td>Picks the buttons, and the Content Extension</td><td class="nowrap">1, 5</td></tr>
+  <tr><td><code>aps.thread-id</code></td><td>Groups notifications in Notification Center</td><td>4</td></tr>
+  <tr><td><code>aps.mutable-content: 1</code></td><td>Lets the Service Extension change it before it’s shown</td><td>5</td></tr>
+  <tr><td><code>aps.content-available: 1</code></td><td>Wakes the app in the background. For a silent push, it’s the only key in <code>aps</code></td><td>4</td></tr>
+  <tr><td><code>aps.interruption-level</code></td><td><code>passive</code> · <code>active</code> · <code>time-sensitive</code> · <code>critical</code></td><td class="nowrap">1, 7</td></tr>
+  <tr><td><code>aps.relevance-score</code></td><td>0 to 1. Sort order in the Scheduled Summary</td><td class="nowrap">4, 7</td></tr>
+  <tr><td>Your keys, outside <code>aps</code></td><td>IDs for the app: <code>orderId</code>, <code>sender</code>, <code>conversationId</code>…</td><td class="nowrap">4, 5</td></tr>
+  <tr><td><code>Simulator Target Bundle</code></td><td>Only for the Simulator (drag and drop, or <code>simctl push</code>). Remove it before sending</td><td>7</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

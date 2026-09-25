@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="table.css">
+<table>
+  <tr><th>APNs says</th><th>What it means</th><th>Fix</th></tr>
+  <tr><td>200</td><td>Accepted. Not the same as “shown on screen”</td><td>If nothing appears, look at permission, Focus and the Delivery Log (Part 7)</td></tr>
+  <tr><td>403<br>InvalidProviderToken</td><td>The JWT doesn’t match a key: wrong Key ID, wrong Team ID, the wrong <code>.p8</code>, or a revoked key</td><td>Compare <code>KEY_ID</code> with the key’s page and <code>TEAM_ID</code> with Membership details</td></tr>
+  <tr><td>403<br>ExpiredProviderToken</td><td>The JWT’s <code>iat</code> is more than 1 hour old</td><td>Sign a new one. Reuse each JWT for 20–60 min</td></tr>
+  <tr><td>429<br>TooManyProviderTokenUpdates</td><td>You signed a new JWT more often than every 20 min</td><td>Cache the JWT instead of signing one per request</td></tr>
+  <tr><td>400<br>BadDeviceToken</td><td>The token belongs to the other environment, or isn’t a token</td><td>Debug builds → <code>api.sandbox.push.apple.com</code>. TestFlight and App Store → <code>api.push.apple.com</code></td></tr>
+  <tr><td>400<br>TopicDisallowed</td><td><code>apns-topic</code> is a bundle ID this key can’t push to</td><td>Use your app’s bundle ID. A topic-specific key only covers the topics you picked</td></tr>
+  <tr><td>400<br>MissingDeviceToken</td><td>The URL has no token after <code>/3/device/</code></td><td>Your token variable is empty</td></tr>
+  <tr><td>TLS or certificate error</td><td>Your server doesn’t trust APNs’ server certificate</td><td>Update the trust store: it needs <em>USERTrust RSA Certification Authority</em> (the 2025 change)</td></tr>
+</table>
+<script>document.documentElement.dataset.height = Math.ceil(document.documentElement.getBoundingClientRect().height)</script>

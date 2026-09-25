@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="460" viewBox="-20 -20 1040 460" role="img" aria-label="Token lifecycle. On every launch the app registers, gets the APNs token and then the FCM token, and uploads them only if they changed or the last upload is older than seven days. iOS issues a new token after reinstall, restore to a new device, erase, or a build environment change. Your token registry sends notifications and deletes tokens that APNs or FCM report as unregistered."><style>
+text{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif}
+.sv-zone{fill:#E8ECF1}.sv-box{fill:#fff;stroke:#D3DAE3;stroke-width:1.25}
+.sv-acc{fill:#FBE6E3;stroke:#D4382C;stroke-width:1.5}.sv-bad{fill:#FBE6E3;stroke:#C3362B;stroke-width:1.5;stroke-dasharray:6 4}
+.sv-note{fill:#fff;stroke:#566172;stroke-width:1;stroke-dasharray:3 3}
+.ln-app{stroke:#2C62CC;stroke-width:2}.ln-ios{stroke:#5B6778;stroke-width:2}.ln-apns{stroke:#6A4CC4;stroke-width:2}.ln-fcm{stroke:#B27708;stroke-width:2}.ln-server{stroke:#16806A;stroke-width:2}
+.sv-t{font-size:13.5px;font-weight:600;fill:#131A24}.sv-s{font-size:12.5px;fill:#566172}.sv-i{font-size:12.5px;fill:#131A24}
+.sv-m{font-family:Menlo,monospace;font-size:11.5px;fill:#566172}.sv-mt{font-family:Menlo,monospace;font-size:12px;fill:#131A24}
+.sv-cap{font-family:Menlo,monospace;font-size:11px;letter-spacing:.1em;fill:#566172;font-weight:500}
+.sv-line{stroke:#566172;stroke-width:1.5;fill:none}.sv-line.acc{stroke:#D4382C}.sv-line.bad{stroke:#C3362B}.dash{stroke-dasharray:6 5}
+.sv-life{stroke:#D3DAE3;stroke-width:1.5;stroke-dasharray:3 6}.sv-rule{stroke:#D3DAE3;stroke-width:1}
+.sv-lbl{font-size:12.5px;fill:#131A24;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}.sv-lbl.z{stroke:#E8ECF1}.sv-lbl.m{font-family:Menlo,monospace;font-size:11.5px}
+.sv-step{fill:#D4382C}.sv-step-t{font-family:Menlo,monospace;font-size:10.5px;font-weight:600;fill:#fff}
+.f-muted{fill:#566172}.f-acc{fill:#D4382C}.f-bad{fill:#C3362B}
+</style><rect x="-20" y="-20" width="1040" height="460" fill="#fff"/>
+      <defs>
+        <marker id="f3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-muted"/></marker>
+        <marker id="f3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-acc"/></marker>
+      </defs>
+      <text class="sv-cap" x="20" y="12">ON THE DEVICE</text>
+      <rect class="sv-box" x="20" y="20" width="270" height="44" rx="9"/>
+      <text class="sv-t" x="155" y="47" text-anchor="middle">App launch or foreground</text>
+      <line class="sv-line" x1="155" y1="64" x2="155" y2="90" marker-end="url(#f3a)"/>
+      <rect class="sv-box" x="20" y="92" width="270" height="44" rx="9"/>
+      <text class="sv-mt" x="155" y="118.5" text-anchor="middle">registerForRemoteNotifications()</text>
+      <line class="sv-line" x1="155" y1="136" x2="155" y2="162" marker-end="url(#f3a)"/>
+      <rect class="sv-box" x="20" y="164" width="270" height="44" rx="9"/>
+      <text class="sv-t" x="155" y="191" text-anchor="middle">APNs token → FCM token</text>
+      <line class="sv-line" x1="155" y1="208" x2="155" y2="234" marker-end="url(#f3a)"/>
+      <rect class="sv-acc" x="20" y="236" width="270" height="56" rx="9"/>
+      <text class="sv-t" x="155" y="259" text-anchor="middle">Changed since last upload?</text>
+      <text class="sv-s" x="155" y="278" text-anchor="middle">or last upload older than 7 days</text>
+      <line class="sv-line" x1="155" y1="292" x2="155" y2="338" marker-end="url(#f3a)"/>
+      <text class="sv-lbl" x="165" y="320">no</text>
+      <rect class="sv-box" x="20" y="340" width="270" height="44" rx="9"/>
+      <text class="sv-s" x="155" y="367" text-anchor="middle">nothing to do</text>
+
+      <line class="sv-line" x1="290" y1="264" x2="358" y2="264" marker-end="url(#f3a)"/>
+      <text class="sv-lbl" x="324" y="256" text-anchor="middle">yes: upload</text>
+
+      <text class="sv-cap" x="360" y="182">ON YOUR SERVER</text>
+      <rect class="sv-box ln-server" x="360" y="190" width="280" height="150" rx="10"/>
+      <text class="sv-t" x="500" y="213" text-anchor="middle">Token registry (your DB)</text>
+      <line class="sv-rule" x1="360" y1="226" x2="640" y2="226"/>
+      <text class="sv-mt" x="380" y="250">userId · deviceId</text>
+      <text class="sv-mt" x="380" y="274">fcmToken · apnsToken</text>
+      <text class="sv-mt" x="380" y="298">environment · appVersion</text>
+      <text class="sv-mt" x="380" y="322">lastSeenAt</text>
+
+      <rect class="sv-acc" x="710" y="20" width="270" height="164" rx="10"/>
+      <text class="sv-t" x="726" y="44">iOS issues a new token when…</text>
+      <text class="sv-i" x="726" y="70">· the app is deleted and reinstalled</text>
+      <text class="sv-i" x="726" y="92">· a backup is restored to a new device</text>
+      <text class="sv-i" x="726" y="114">· the device is erased / iOS reinstalled</text>
+      <text class="sv-i" x="726" y="136">· the build env changes (Debug ↔ TestFlight)</text>
+      <text class="sv-i" x="726" y="158">· other system events: never assume</text>
+      <path class="sv-line acc" d="M710,110 H330 V186 H292" marker-end="url(#f3b)"/>
+      <text class="sv-lbl" x="520" y="102" text-anchor="middle">new token</text>
+
+      <rect class="sv-box" x="710" y="240" width="270" height="164" rx="10"/>
+      <text class="sv-t" x="726" y="264">Every send returns a verdict</text>
+      <text class="sv-i" x="726" y="290">200 OK → keep the token</text>
+      <text class="sv-i" x="726" y="313">410 Unregistered → delete</text>
+      <text class="sv-i" x="726" y="336">FCM 404 UNREGISTERED → delete</text>
+      <text class="sv-i" x="726" y="359">400 BadDeviceToken → wrong env</text>
+      <text class="sv-i" x="726" y="382">unseen for 60 days → prune</text>
+      <line class="sv-line" x1="640" y1="280" x2="708" y2="280" marker-end="url(#f3a)"/>
+      <text class="sv-lbl" x="674" y="272" text-anchor="middle">send</text>
+      <line class="sv-line" x1="710" y1="318" x2="642" y2="318" marker-end="url(#f3a)"/>
+      <text class="sv-lbl" x="676" y="336" text-anchor="middle">delete</text>
+    </svg>

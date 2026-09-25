@@ -46,25 +46,25 @@ VoIP pushes differ from alert pushes in almost every way:
 You ask PushKit for a VoIP token by creating a `PKPushRegistry` and saying which push type you want. No permission prompt is involved:
 
 ```swift
-    /// Registering asks for a VoIP token. No permission prompt is involved.
-    func start() {
-        registry.delegate = self
-        registry.desiredPushTypes = [.voIP]
-    }
+/// Registering asks for a VoIP token. No permission prompt is involved.
+func start() {
+    registry.delegate = self
+    registry.desiredPushTypes = [.voIP]
+}
 ```
 
 The token arrives in a delegate callback, as `Data`, just like the APNs token in Part 3:
 
 ```swift
-    func pushRegistry(_ registry: PKPushRegistry,
-                      didUpdate pushCredentials: PKPushCredentials,
-                      for type: PKPushType) {
-        tokens?.didReceiveVoIPToken(pushCredentials.token)
-    }
+func pushRegistry(_ registry: PKPushRegistry,
+                  didUpdate pushCredentials: PKPushCredentials,
+                  for type: PKPushType) {
+    tokens?.didReceiveVoIPToken(pushCredentials.token)
+}
 
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
-        tokens?.didReceiveVoIPToken(nil)
-    }
+func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
+    tokens?.didReceiveVoIPToken(nil)
+}
 ```
 
 `PushTokenStore` hex-encodes it and uploads it in the same device record as the others (the `voipToken` field from Part 3). Treat it exactly like the APNs token: it can change, and when iOS invalidates it, tell your server.
@@ -78,35 +78,35 @@ I expected the Simulator not to get a VoIP token. On Xcode 27 it does, 80 bytes 
 This is the method iOS watches:
 
 ```swift
-    func pushRegistry(_ registry: PKPushRegistry,
-                      didReceiveIncomingPushWith payload: PKPushPayload,
-                      for type: PKPushType,
-                      completion: @escaping () -> Void) {
-        let caller = payload.dictionaryPayload[PayloadKey.caller] as? String ?? "Unknown caller"
-        reportIncomingCall(from: caller)   // FIRST: tell CallKit
-        completion()                       // THEN: tell PushKit we're done
-    }
+func pushRegistry(_ registry: PKPushRegistry,
+                  didReceiveIncomingPushWith payload: PKPushPayload,
+                  for type: PKPushType,
+                  completion: @escaping () -> Void) {
+    let caller = payload.dictionaryPayload[PayloadKey.caller] as? String ?? "Unknown caller"
+    reportIncomingCall(from: caller)   // FIRST: tell CallKit
+    completion()                       // THEN: tell PushKit we're done
+}
 ```
 
 And this is the report:
 
 ```swift
-    /// Shows the system incoming-call screen.
-    func reportIncomingCall(from caller: String) {
-        let uuid = UUID()
-        let update = CXCallUpdate()
-        update.remoteHandle = CXHandle(type: .generic, value: caller)
-        update.localizedCallerName = caller
-        update.hasVideo = false
+/// Shows the system incoming-call screen.
+func reportIncomingCall(from caller: String) {
+    let uuid = UUID()
+    let update = CXCallUpdate()
+    update.remoteHandle = CXHandle(type: .generic, value: caller)
+    update.localizedCallerName = caller
+    update.hasVideo = false
 
-        calls.insert(CallRecord(id: uuid, caller: caller, date: .now, state: "Ringing"), at: 0)
-        EventLog.add("Reported call from \(caller) to CallKit", source: "voip")
+    calls.insert(CallRecord(id: uuid, caller: caller, date: .now, state: "Ringing"), at: 0)
+    EventLog.add("Reported call from \(caller) to CallKit", source: "voip")
 
-        provider.reportNewIncomingCall(with: uuid, update: update) { error in
-            guard let error else { return }
-            Task { @MainActor in self.setState(uuid, "Failed: \(error.localizedDescription)") }
-        }
+    provider.reportNewIncomingCall(with: uuid, update: update) { error in
+        guard let error else { return }
+        Task { @MainActor in self.setState(uuid, "Failed: \(error.localizedDescription)") }
     }
+}
 ```
 
 Apple's documentation is blunt about the rule. Since iOS 13, if you receive a VoIP push and don't report a call to CallKit, **the system terminates your app**. If you keep doing it, **iOS may stop delivering VoIP pushes to your app at all.** That's why VoIP pushes can't be used for anything but calls anymore: no "silent sync over VoIP", no "wake up and check mail".
@@ -118,11 +118,11 @@ About `completion()`: Apple's sample code calls it inside CallKit's callback, af
 The top line of the call screen, *"NotifyLab Audio"*, is iOS's own label: your app's name plus the call type. The provider is configured once:
 
 ```swift
-        let configuration = CXProviderConfiguration()
-        configuration.supportsVideo = false
-        configuration.maximumCallsPerCallGroup = 1
-        configuration.supportedHandleTypes = [.generic]
-        provider = CXProvider(configuration: configuration)
+let configuration = CXProviderConfiguration()
+configuration.supportsVideo = false
+configuration.maximumCallsPerCallGroup = 1
+configuration.supportedHandleTypes = [.generic]
+provider = CXProvider(configuration: configuration)
 ```
 
 A Swift 6 note: both delegates are declared `@preconcurrency`, because NotifyLab created the registry with `queue: .main` and passed `queue: nil` (the main queue) to the provider. Both frameworks call back on the main thread, so the main-actor conformance is safe.
@@ -132,16 +132,16 @@ A Swift 6 note: both delegates are declared `@preconcurrency`, because NotifyLab
 When the user slides to answer or taps End, CallKit asks your provider delegate to perform the action:
 
 ```swift
-    func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        setState(action.callUUID, "Answered")
-        // Start your audio session / WebRTC connection here.
-        action.fulfill()
-    }
+func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+    setState(action.callUUID, "Answered")
+    // Start your audio session / WebRTC connection here.
+    action.fulfill()
+}
 
-    func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        setState(action.callUUID, "Ended")
-        action.fulfill()
-    }
+func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+    setState(action.callUUID, "Ended")
+    action.fulfill()
+}
 ```
 
 Call `fulfill()` when the action succeeded, or `fail()` if it didn't. A real app connects its audio in the answer action, and starts playing sound only when CallKit says the audio session is ready (`provider(_:didActivate:)`). The Calls tab lists every call with its state, so you can watch these arrive.
@@ -161,8 +161,8 @@ The payload is small. `aps` stays empty, and the rest is yours (`payloads/voip-c
 The headers are what make it a VoIP push. NotifyLab's tools set them for the `voip` type:
 
 ```js
-    case "voip":
-      return { "apns-push-type": "voip", "apns-priority": "10", "apns-topic": `${bundleId}.voip`, "apns-expiration": "0" };
+case "voip":
+  return { "apns-push-type": "voip", "apns-priority": "10", "apns-topic": `${bundleId}.voip`, "apns-expiration": "0" };
 ```
 
 - **`apns-push-type: voip`** and the topic **`<bundle ID>.voip`**. I tried getting each wrong: an alert-type push to a VoIP token, and a VoIP push without the `.voip` suffix, both came back `400 DeviceTokenNotForTopic`.

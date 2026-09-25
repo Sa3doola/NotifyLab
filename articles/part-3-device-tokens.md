@@ -345,4 +345,4 @@ A token that was valid and then died gets `404 UNREGISTERED` instead, which is y
 - **`identifierForVendor` resets too.** It changes when the user deletes all your apps, just like the token. A new device ID is a new row; the old one gets pruned.
 - **Treat tokens as personal data.** Delete a user's device rows when they delete their account.
 
-**Next: Part 4, Sending.** The full journey in 15 steps, an APNs request line by line, and three real payloads (an order update, a marketing message and a silent sync), each with the headers that make it behave, plus the same sends through FCM's `apns` block.
+**Next: [Part 4, Sending](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-4-sending-ded1a52b3532).** The full journey in 15 steps, an APNs request line by line, and three real payloads (an order update, a marketing message and a silent sync), each with the headers that make it behave, plus the same sends through FCM's `apns` block.

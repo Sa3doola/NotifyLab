@@ -42,27 +42,27 @@ Both are separate targets with their own bundle IDs (`…notifylab.service` and 
 iOS hands you the notification and a *content handler*: the function you call, exactly once, with the version to show. NotifyLab does the cheap, important work first, so there's something good to show even if the slow part fails:
 
 ```swift
-        guard let content = request.content.mutableCopy() as? UNMutableNotificationContent else {
-            contentHandler(request.content)
-            return
-        }
+guard let content = request.content.mutableCopy() as? UNMutableNotificationContent else {
+    contentHandler(request.content)
+    return
+}
 
-        // 1. Quick work first. If time runs out later, iOS shows at least this.
-        let update = OrderUpdate(userInfo: content.userInfo)
-        if let update {
-            SharedOrders.apply(update)   // the app is up to date before the user opens it
-            if content.title.isEmpty {
-                content.title = "Order #\(update.orderID): \(update.status.title)"
-            }
-            EventLog.add("Service extension saved order \(update.orderID) → \(update.status.title)", source: "service")
-        }
-        let imageURL = update?.imageURL
-            ?? (content.userInfo[PayloadKey.imageURL] as? String).flatMap(URL.init(string:))
+// 1. Quick work first. If time runs out later, iOS shows at least this.
+let update = OrderUpdate(userInfo: content.userInfo)
+if let update {
+    SharedOrders.apply(update)   // the app is up to date before the user opens it
+    if content.title.isEmpty {
+        content.title = "Order #\(update.orderID): \(update.status.title)"
+    }
+    EventLog.add("Service extension saved order \(update.orderID) → \(update.status.title)", source: "service")
+}
+let imageURL = update?.imageURL
+    ?? (content.userInfo[PayloadKey.imageURL] as? String).flatMap(URL.init(string:))
 
-        lock.withLock {
-            self.contentHandler = contentHandler
-            self.bestAttempt = content
-        }
+lock.withLock {
+    self.contentHandler = contentHandler
+    self.bestAttempt = content
+}
 ```
 
 `SharedOrders.apply(update)` writes the new order status into the App Group. When the user taps the banner, the Orders screen is already up to date, with no network request.
@@ -72,40 +72,40 @@ iOS hands you the notification and a *content handler*: the function you call, e
 Then the photo. `order-shipped.apns` carries its URL as a custom key, `"image"`. The comment in the code says step 3 because step 2, the chat-message branch, has its own section below.
 
 ```swift
-        // 3. Slow work: download the image and attach it.
-        guard let imageURL else {
-            finish()
-            return
-        }
-        Task {
-            let attachment = await Self.downloadAttachment(from: imageURL)
-            if attachment != nil {
-                EventLog.add("Service extension attached image", source: "service")
-            }
-            self.finish { content in
-                if let attachment { content.attachments = [attachment] }
-                return content
-            }
-        }
+// 3. Slow work: download the image and attach it.
+guard let imageURL else {
+    finish()
+    return
+}
+Task {
+    let attachment = await Self.downloadAttachment(from: imageURL)
+    if attachment != nil {
+        EventLog.add("Service extension attached image", source: "service")
+    }
+    self.finish { content in
+        if let attachment { content.attachments = [attachment] }
+        return content
+    }
+}
 ```
 
 ```swift
-    /// Downloads to a temp file with the right extension. iOS uses the file extension to
-    /// work out the type. Limits: image 10 MB, audio 5 MB, video 50 MB.
-    private static func downloadAttachment(from url: URL) async -> UNNotificationAttachment? {
-        do {
-            let (downloaded, response) = try await URLSession.shared.download(from: url)
-            let ext = url.pathExtension.isEmpty
-                ? ((response.mimeType?.contains("png") ?? false) ? "png" : "jpg")
-                : url.pathExtension
-            let file = FileManager.default.temporaryDirectory
-                .appending(path: "\(UUID().uuidString).\(ext)")
-            try FileManager.default.moveItem(at: downloaded, to: file)
-            return try UNNotificationAttachment(identifier: "image", url: file)
-        } catch {
-            return nil
-        }
+/// Downloads to a temp file with the right extension. iOS uses the file extension to
+/// work out the type. Limits: image 10 MB, audio 5 MB, video 50 MB.
+private static func downloadAttachment(from url: URL) async -> UNNotificationAttachment? {
+    do {
+        let (downloaded, response) = try await URLSession.shared.download(from: url)
+        let ext = url.pathExtension.isEmpty
+            ? ((response.mimeType?.contains("png") ?? false) ? "png" : "jpg")
+            : url.pathExtension
+        let file = FileManager.default.temporaryDirectory
+            .appending(path: "\(UUID().uuidString).\(ext)")
+        try FileManager.default.moveItem(at: downloaded, to: file)
+        return try UNNotificationAttachment(identifier: "image", url: file)
+    } catch {
+        return nil
     }
+}
 ```
 
 Three rules hide in there:
@@ -119,22 +119,22 @@ Three rules hide in there:
 If the download is still going after about 30 seconds, iOS calls `serviceExtensionTimeWillExpire()`. You must deliver *something* right away. NotifyLab delivers the "best attempt" from Step 1, the text without the photo:
 
 ```swift
-    /// iOS is about to kill the extension. Deliver whatever we have.
-    override func serviceExtensionTimeWillExpire() {
-        EventLog.add("Service extension ran out of time; showing original text", source: "service")
-        finish()
-    }
+/// iOS is about to kill the extension. Deliver whatever we have.
+override func serviceExtensionTimeWillExpire() {
+    EventLog.add("Service extension ran out of time; showing original text", source: "service")
+    finish()
+}
 
-    private func finish(_ transform: (UNMutableNotificationContent) -> UNNotificationContent = { $0 }) {
-        lock.lock()
-        let handler = contentHandler
-        let content = bestAttempt
-        contentHandler = nil
-        lock.unlock()
+private func finish(_ transform: (UNMutableNotificationContent) -> UNNotificationContent = { $0 }) {
+    lock.lock()
+    let handler = contentHandler
+    let content = bestAttempt
+    contentHandler = nil
+    lock.unlock()
 
-        guard let handler, let content else { return }   // already delivered
-        handler(transform(content))
-    }
+    guard let handler, let content else { return }   // already delivered
+    handler(transform(content))
+}
 ```
 
 The download and the timeout race each other, and the handler must be called **exactly once**. The lock makes sure whichever path gets there first wins, and the other one finds `contentHandler` already `nil` and does nothing. That shared state is also why the class is marked `@unchecked Sendable` in Swift 6: the lock is what makes it safe, and the compiler can't see that on its own.
@@ -159,9 +159,9 @@ It takes three things:
 The second one is three lines in `project.yml`:
 
 ```yaml
-        # Communication notifications (Part 5): the intents the Service Extension donates.
-        NSUserActivityTypes:
-          - INSendMessageIntent
+# Communication notifications (Part 5): the intents the Service Extension donates.
+NSUserActivityTypes:
+  - INSendMessageIntent
 ```
 
 The push itself is an ordinary alert with `mutable-content: 1`, plus who sent it and which chat it belongs to (`payloads/driver-message.apns`):
@@ -193,62 +193,62 @@ The alert's title is a fallback. If the extension fails, the user still sees "Ka
 In the extension, a message takes its own branch:
 
 ```swift
-        // 2. A message from a person: show it as a communication notification.
-        if let message = ChatMessage(userInfo: content.userInfo, text: content.body) {
-            Task {
-                let intent = await Self.donateMessageIntent(for: message)
-                self.finish { content in
-                    do {
-                        // Swaps the app icon for the sender's photo and name.
-                        return try content.updating(from: intent)
-                    } catch {
-                        EventLog.add("updating(from:) failed: \(error.localizedDescription)", source: "service")
-                        return content
-                    }
-                }
+// 2. A message from a person: show it as a communication notification.
+if let message = ChatMessage(userInfo: content.userInfo, text: content.body) {
+    Task {
+        let intent = await Self.donateMessageIntent(for: message)
+        self.finish { content in
+            do {
+                // Swaps the app icon for the sender's photo and name.
+                return try content.updating(from: intent)
+            } catch {
+                EventLog.add("updating(from:) failed: \(error.localizedDescription)", source: "service")
+                return content
             }
-            return
         }
+    }
+    return
+}
 ```
 
 The real work is describing the message in the system's own words, then *donating* it:
 
 ```swift
-    private static func donateMessageIntent(for message: ChatMessage) async -> INSendMessageIntent {
-        // Pass the photo as bytes. We download it here, inside the extension's 30 seconds.
-        var avatar: INImage?
-        if let url = message.avatarURL, let data = try? await URLSession.shared.data(from: url).0 {
-            avatar = INImage(imageData: data)
-        }
-        let sender = INPerson(
-            personHandle: INPersonHandle(value: message.senderID, type: .unknown),
-            nameComponents: nil,
-            displayName: message.senderName,
-            image: avatar,
-            contactIdentifier: nil,
-            customIdentifier: message.senderID
-        )
-        let intent = INSendMessageIntent(
-            recipients: nil,                          // one-to-one: the user is the recipient
-            outgoingMessageType: .outgoingMessageText,
-            content: message.text,
-            speakableGroupName: nil,
-            conversationIdentifier: message.conversationID,   // same ID for the whole chat
-            serviceName: nil,
-            sender: sender,
-            attachments: nil
-        )
-
-        let interaction = INInteraction(intent: intent, response: nil)
-        interaction.direction = .incoming
-        do {
-            try await interaction.donate()
-            EventLog.add("Service extension: message from \(message.senderName) → communication notification", source: "service")
-        } catch {
-            EventLog.add("Intent donation failed: \(error.localizedDescription)", source: "service")
-        }
-        return intent
+private static func donateMessageIntent(for message: ChatMessage) async -> INSendMessageIntent {
+    // Pass the photo as bytes. We download it here, inside the extension's 30 seconds.
+    var avatar: INImage?
+    if let url = message.avatarURL, let data = try? await URLSession.shared.data(from: url).0 {
+        avatar = INImage(imageData: data)
     }
+    let sender = INPerson(
+        personHandle: INPersonHandle(value: message.senderID, type: .unknown),
+        nameComponents: nil,
+        displayName: message.senderName,
+        image: avatar,
+        contactIdentifier: nil,
+        customIdentifier: message.senderID
+    )
+    let intent = INSendMessageIntent(
+        recipients: nil,                          // one-to-one: the user is the recipient
+        outgoingMessageType: .outgoingMessageText,
+        content: message.text,
+        speakableGroupName: nil,
+        conversationIdentifier: message.conversationID,   // same ID for the whole chat
+        serviceName: nil,
+        sender: sender,
+        attachments: nil
+    )
+
+    let interaction = INInteraction(intent: intent, response: nil)
+    interaction.direction = .incoming
+    do {
+        try await interaction.donate()
+        EventLog.add("Service extension: message from \(message.senderName) → communication notification", source: "service")
+    } catch {
+        EventLog.add("Intent donation failed: \(error.localizedDescription)", source: "service")
+    }
+    return intent
+}
 ```
 
 Piece by piece:
@@ -265,16 +265,16 @@ About Focus: a communication notification skips the Scheduled Summary by default
 The payload's `category` is `MESSAGE`, which gives the notification a text field:
 
 ```swift
-        // Chat message from the driver: reply without opening the app.
-        // The sender's photo comes from the Service Extension (communication notification).
-        let reply = UNTextInputNotificationAction(
-            identifier: ActionID.messageReply,
-            title: "Reply",
-            options: [],
-            icon: UNNotificationActionIcon(systemImageName: "arrowshape.turn.up.left"),
-            textInputButtonTitle: "Send",
-            textInputPlaceholder: "Message"
-        )
+// Chat message from the driver: reply without opening the app.
+// The sender's photo comes from the Service Extension (communication notification).
+let reply = UNTextInputNotificationAction(
+    identifier: ActionID.messageReply,
+    title: "Reply",
+    options: [],
+    icon: UNNotificationActionIcon(systemImageName: "arrowshape.turn.up.left"),
+    textInputButtonTitle: "Send",
+    textInputPlaceholder: "Message"
+)
 ```
 
 ![The driver's message on the iPhone lock screen, long-pressed, with the Reply field open above the keyboard and a Send button](screenshots/p5-communication-reply.png)
@@ -283,8 +283,8 @@ The payload's `category` is `MESSAGE`, which gives the notification a text field
 The typed text arrives in the same notification router as every other button (Part 1):
 
 ```swift
-        case ActionID.messageReply:
-            EventLog.add("Reply to driver: \(event.typedText ?? "")", source: "app")
+case ActionID.messageReply:
+    EventLog.add("Reply to driver: \(event.typedText ?? "")", source: "app")
 ```
 
 I tested the whole path on my iPhone: the photo and name replaced the app icon, the Reply text reached the app, and Xcode's automatic signing added the capability to the App ID and profile by itself on the first ⌘R.
@@ -299,11 +299,11 @@ I tested the whole path on my iPhone: the photo and name replaced the app icon, 
 A Content Extension is a view controller that iOS shows when the user long-presses a notification. Which notifications get it is decided in its Info.plist:
 
 ```yaml
-          NSExtensionAttributes:
-            UNNotificationExtensionCategory: ORDER          # must match aps.category
-            UNNotificationExtensionInitialContentSizeRatio: 0.62
-            UNNotificationExtensionDefaultContentHidden: true   # our card shows title/body itself
-            UNNotificationExtensionUserInteractionEnabled: false
+NSExtensionAttributes:
+  UNNotificationExtensionCategory: ORDER          # must match aps.category
+  UNNotificationExtensionInitialContentSizeRatio: 0.62
+  UNNotificationExtensionDefaultContentHidden: true   # our card shows title/body itself
+  UNNotificationExtensionUserInteractionEnabled: false
 ```
 
 - **`UNNotificationExtensionCategory`**: only notifications with `"category": "ORDER"` get this card. The driver's message (`MESSAGE`) doesn't.
@@ -314,19 +314,19 @@ A Content Extension is a view controller that iOS shows when the user long-press
 The view controller hosts a SwiftUI view and fills it from the notification:
 
 ```swift
-    /// Called with each notification in the group. Update the UI for the newest one.
-    func didReceive(_ notification: UNNotification) {
-        let content = notification.request.content
-        card.title = content.title
-        card.body = content.body
-        card.update = OrderUpdate(userInfo: content.userInfo)
-        if let id = card.update?.orderID {
-            card.timeline = SharedOrders.timelines()[id] ?? []
-        }
-        card.image = Self.loadImage(from: content.attachments.first)
-        card.note = nil
-        EventLog.add("Content extension showed the order card", source: "content")
+/// Called with each notification in the group. Update the UI for the newest one.
+func didReceive(_ notification: UNNotification) {
+    let content = notification.request.content
+    card.title = content.title
+    card.body = content.body
+    card.update = OrderUpdate(userInfo: content.userInfo)
+    if let id = card.update?.orderID {
+        card.timeline = SharedOrders.timelines()[id] ?? []
     }
+    card.image = Self.loadImage(from: content.attachments.first)
+    card.note = nil
+    EventLog.add("Content extension showed the order card", source: "content")
+}
 ```
 
 The photo the Service Extension attached is available here too, and the timeline comes from the same App Group the Service Extension just wrote to. The two extensions never talk to each other, but they share the same data.
@@ -336,18 +336,18 @@ The photo the Service Extension attached is available here too, and the timeline
 When the user taps a button under the card, the Content Extension hears about it first and decides:
 
 ```swift
-    /// Action buttons come here first. We decide: handle in place, or open the app.
-    func didReceive(_ response: UNNotificationResponse,
-                    completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) -> Void) {
-        switch response.actionIdentifier {
-        case ActionID.orderContact:
-            card.note = "Calling your driver…"
-            EventLog.add("Call driver tapped in the content extension", source: "content")
-            completion(.doNotDismiss)              // stay open, card updated
-        default:
-            completion(.dismissAndForwardAction)   // e.g. "Track order": let the app handle it
-        }
+/// Action buttons come here first. We decide: handle in place, or open the app.
+func didReceive(_ response: UNNotificationResponse,
+                completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) -> Void) {
+    switch response.actionIdentifier {
+    case ActionID.orderContact:
+        card.note = "Calling your driver…"
+        EventLog.add("Call driver tapped in the content extension", source: "content")
+        completion(.doNotDismiss)              // stay open, card updated
+    default:
+        completion(.dismissAndForwardAction)   // e.g. "Track order": let the app handle it
     }
+}
 ```
 
 - **`.doNotDismiss`**: the card stays open and updates. *Call driver* shows "Calling your driver…" right there.

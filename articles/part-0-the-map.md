@@ -64,6 +64,8 @@ It comes with a test kit, so every part ends with *"now run this"*:
 - `tools/registry-server.mjs`: a 100-line token server that deletes dead tokens.
 - A Postman collection, and the Push Notifications Console walkthrough.
 
+**The code is on GitHub: [github.com/Sa3doola/NotifyLab](https://github.com/Sa3doola/NotifyLab).** Clone it, open `NotifyLab.xcodeproj` and run it on any iOS 17+ Simulator. You don't need an Apple Developer account until Part 2.
+
 ## The series
 
 ![Table of the series. Part 0: Which notification do you need? Part 1: Ask well, remind well, habit reminders with actions. Part 2: Wiring up push, App ID, capabilities, entitlements and the .p8 key. Part 3: Device tokens and FCM. Part 4: Sending order updates, marketing and silent syncs. Part 5: Rich and communication notifications, a Service Extension for images and messages with the sender's photo, and a Content Extension for custom UI. Part 6: VoIP with PushKit and CallKit. Part 7: Real-world delivery, Focus, Low Power Mode, interruption levels and test tools. Appendix: a cheat sheet of limits, headers and error codes.](tables/p0-series.png)

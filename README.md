@@ -16,6 +16,8 @@ Targets: `NotifyLab` (iOS 17+, Swift 6), `NotifyLabService` (Notification Servic
 ## Run it in 2 minutes (no Apple account needed)
 
 ```bash
+git clone https://github.com/Sa3doola/NotifyLab.git
+cd NotifyLab
 open NotifyLab.xcodeproj        # run the NotifyLab scheme on any iOS 17+ Simulator
 ```
 

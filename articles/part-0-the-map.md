@@ -73,4 +73,4 @@ It comes with a test kit, so every part ends with *"now run this"*:
 
 The repo holds the finished app. Each part names the files it covers, so you can read the real code next to the article.
 
-**Next: Part 1, Ask well, remind well.** We'll ask for permission at the moment it makes sense, schedule habit reminders that respect the 64-notification limit, and add Done and Snooze buttons that work without opening the app.
+**Next: [Part 1, Ask well, remind well](https://medium.com/@saadsherif02/ios-notifications-end-to-end-part-1-ask-well-remind-well-c8800c253ae2).** We'll ask for permission at the moment it makes sense, schedule habit reminders that respect the 64-notification limit, and add Done and Snooze buttons that work without opening the app.

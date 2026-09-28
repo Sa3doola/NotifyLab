@@ -43,6 +43,19 @@ struct DeviceRecord: Codable, Sendable {
     let osVersion: String
 }
 
+/// APNs's own response to the last push `/send` made for this device, persisted server-side.
+/// The send itself happens from Terminal (`apns.sh`) or curl, outside the app, so this is the
+/// only way the app can show it. Status 200 means APNs accepted the push — never that iOS showed it.
+struct SendResult: Codable, Sendable {
+    let status: Int
+    let apnsId: String?
+    let reason: String?
+    let action: String?
+    let sentAt: String
+
+    var sentDate: Date? { ISO8601DateFormatter().date(from: sentAt) }
+}
+
 /// Holds the three tokens this app can have, and uploads them only when something changed.
 @MainActor @Observable
 final class PushTokenStore {
@@ -51,7 +64,11 @@ final class PushTokenStore {
     private(set) var voipToken: String?
     private(set) var registrationError: String?
     private(set) var uploadStatus = "Waiting for a token"
+    private(set) var lastSendResult: SendResult?
+    private(set) var lastSendResultStatus = "No test push seen yet"
     let environment = APSEnvironment.current
+    // identifierForVendor also changes when the user deletes all your apps, like the token does.
+    let deviceID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
 
     var registryURL: String {
         get { UserDefaults.standard.string(forKey: "registryURL")
@@ -111,10 +128,26 @@ final class PushTokenStore {
         }
     }
 
+    /// Polls the registry server for what `/send` last did with this device's token.
+    func refreshLastSendResult() async {
+        guard let base = DeviceRegistry.normalizedURL(registryURL) else {
+            lastSendResultStatus = "No server URL set."
+            return
+        }
+        do {
+            guard let result = try await DeviceRegistry.fetchLastSendResult(deviceID: deviceID, from: base) else {
+                lastSendResultStatus = "No test push seen yet"
+                return
+            }
+            lastSendResult = result
+        } catch {
+            lastSendResultStatus = "Couldn't reach \(base.absoluteString): \(error.localizedDescription)"
+        }
+    }
+
     private func makeRecord() -> DeviceRecord {
         DeviceRecord(
-            // identifierForVendor also changes when the user deletes all your apps, like the token does.
-            deviceID: UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
+            deviceID: deviceID,
             userID: "demo-user",
             platform: "ios",
             bundleID: Bundle.main.bundleIdentifier ?? "",
@@ -150,5 +183,16 @@ enum DeviceRegistry {
         let (_, response) = try await URLSession.shared.data(for: request)
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
         guard (200..<300).contains(status) else { throw HTTPError(status: status) }
+    }
+
+    /// GET /devices/:deviceID on tools/registry-server.mjs. nil means the server has never sent this device a test push.
+    static func fetchLastSendResult(deviceID: String, from base: URL) async throws -> SendResult? {
+        let request = URLRequest(url: base.appending(path: "devices").appending(path: deviceID))
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        if status == 404 { return nil }
+        guard (200..<300).contains(status) else { throw HTTPError(status: status) }
+        struct DeviceWithResult: Decodable { let lastSendResult: SendResult? }
+        return try JSONDecoder().decode(DeviceWithResult.self, from: data).lastSendResult
     }
 }

@@ -5,6 +5,7 @@
 //
 //   POST /devices                 the app uploads its tokens here (upsert by deviceID)
 //   GET  /devices                 list what we have
+//   GET  /devices/:deviceID       one device, including lastSendResult (the app polls this)
 //   POST /send  {"file":"payloads/order-shipped.apns","type":"alert","collapseId":"order-1042"}
 //                                 send to every device (type and collapseId are optional)
 import { createServer } from "node:http";
@@ -66,7 +67,18 @@ async function sendToAll({ file, type = "alert", collapseId }) {
     const action = verdict(result);
     // 410: dead token. Delete it, unless the device uploaded it again after APNs gave up on it.
     const uploadedSince = result.timestamp && Date.parse(device.lastSeenAt) > result.timestamp;
-    if (action === "delete" && !uploadedSince) delete db[device.deviceID];
+    if (action === "delete" && !uploadedSince) {
+      delete db[device.deviceID];
+    } else {
+      // So the app can show it: APNs accepting this (status 200) is not the same as iOS displaying it.
+      device.lastSendResult = {
+        status: result.status,
+        apnsId: result.apnsId,
+        reason: result.reason ?? null,
+        action,
+        sentAt: new Date().toISOString(),
+      };
+    }
     results.push({ deviceID: device.deviceID, ...result, action });
   }
   save(db);
@@ -85,6 +97,11 @@ createServer(async (req, res) => {
       return reply(res, 200, { ok: true });
     }
     if (req.method === "GET" && req.url === "/devices") return reply(res, 200, load());
+    if (req.method === "GET" && req.url.startsWith("/devices/")) {
+      const id = decodeURIComponent(req.url.slice("/devices/".length));
+      const device = load()[id];
+      return device ? reply(res, 200, device) : reply(res, 404, { error: "not found" });
+    }
     if (req.method === "POST" && req.url === "/send") return reply(res, 200, await sendToAll(await readBody(req)));
     reply(res, 404, { error: "not found" });
   } catch (error) {

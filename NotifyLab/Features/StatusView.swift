@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StatusView: View {
     @Environment(NotificationPermission.self) private var permission
+    @Environment(PushTokenStore.self) private var tokens
     @State private var log: [LogEntry] = []
 
     var body: some View {
@@ -47,6 +48,30 @@ struct StatusView: View {
                 }
 
                 Section {
+                    if let result = tokens.lastSendResult {
+                        LabeledContent("APNs status", value: "\(result.status)")
+                        if let reason = result.reason {
+                            LabeledContent("Reason", value: reason)
+                        }
+                        if let action = result.action {
+                            LabeledContent("Server's next move", value: action)
+                        }
+                        if let apnsId = result.apnsId {
+                            LabeledContent("apns-id", value: apnsId)
+                        }
+                        if let date = result.sentDate {
+                            LabeledContent("Sent", value: date.formatted(date: .omitted, time: .standard))
+                        }
+                    } else {
+                        Text(tokens.lastSendResultStatus).foregroundStyle(.secondary)
+                    }
+                } header: {
+                    Text("Last test push")
+                } footer: {
+                    Text("APNs's own response to the last push /send made for this device. Status 200 means APNs accepted it — it does not mean iOS displayed it. If nothing showed up, check permission, Low Power Mode and Focus above, not this row.")
+                }
+
+                Section {
                     if log.isEmpty {
                         Text("Nothing yet. Schedule a habit test or send a push.")
                             .foregroundStyle(.secondary)
@@ -71,8 +96,10 @@ struct StatusView: View {
             .navigationTitle("NotifyLab")
             .task {
                 // The extensions write to the shared log from their own processes; poll it.
+                // The send itself happens from Terminal, not the app, so poll the registry server too.
                 while !Task.isCancelled {
                     log = EventLog.all()
+                    await tokens.refreshLastSendResult()
                     try? await Task.sleep(for: .seconds(2))
                 }
             }
